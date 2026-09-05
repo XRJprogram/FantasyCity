@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>卡牌机制与数据详解 · 幻想城·遗失的能力</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- 统一页眉页脚样式与脚本 -->
+    <link rel="stylesheet" href="resources/layout.css" />
+    <script src="resources/layout.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-page: #FDF5ED;
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #F8F0E8;
+            --bg-dark: #1A1412;
+            --text-primary: #3D2B1F;
+            --text-secondary: #5A4A3A;
+            --text-light: #8A7A6A;
+            --accent: #C0392B;
+            --accent-hover: #A93226;
+            --accent-soft: rgba(192, 57, 43, 0.08);
+            --gold: #D4AF37;
+            --gold-soft: rgba(212, 175, 55, 0.15);
+            --border-light: #E8DDD2;
+            --shadow-soft: 0 8px 30px rgba(61, 43, 31, 0.06);
+            --shadow-hover: 0 16px 45px rgba(61, 43, 31, 0.12);
+            --radius: 16px;
+            --radius-sm: 8px;
+            --radius-pill: 40px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-serif: 'Noto Serif SC', 'Songti SC', 'Georgia', serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.75;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 15%, rgba(240, 220, 205, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 90% 85%, rgba(245, 230, 215, 0.5) 0%, transparent 45%);
+            background-attachment: fixed;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        /* 顶部面包屑与标题区 */
+        .page-header {
+            padding: 40px 0 24px;
+            text-align: center;
+        }
+        .breadcrumbs {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        .breadcrumbs a {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+        .page-header h1 {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.08rem;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* 规则与机制总览面板 */
+        .rules-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 32px 36px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 36px;
+        }
+        .rules-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rules-title i {
+            color: var(--accent);
+        }
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .rule-box {
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+        }
+        .rule-box h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rule-box p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* 交互搜索与过滤栏 */
+        .filter-toolbar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            position: sticky;
+            top: 76px;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+        .search-wrap {
+            flex: 1;
+            min-width: 260px;
+            position: relative;
+        }
+        .search-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            font-family: var(--font-sans);
+            font-size: 0.92rem;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            background: var(--bg-sidebar);
+            outline: none;
+            transition: var(--transition);
+            color: var(--text-primary);
+        }
+        .search-input:focus {
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+        }
+        .filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .filter-btn {
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-light);
+            padding: 7px 16px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .filter-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25);
+        }
+
+        /* 卡牌列表网格 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+            margin-bottom: 70px;
+        }
+        .card-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 24px 26px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: #DCCEC1;
+        }
+        .card-item-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+        .card-name-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .card-stats-badges {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 700;
+            flex-wrap: wrap;
+        }
+        .stat-chip {
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            line-height: 1.2;
+        }
+        .chip-cost {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid #FDE68A;
+        }
+        .chip-atk {
+            background: #FFE4E6;
+            color: #BE123C;
+            border: 1px solid #FECDD3;
+        }
+        .chip-hp {
+            background: #DCFCE7;
+            color: #15803D;
+            border: 1px solid #BBF7D0;
+        }
+        .chip-ai-cost {
+            font-size: 0.72rem;
+            color: var(--text-light);
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* 标签栏 */
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .tag-badge {
+            font-family: var(--font-sans);
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            line-height: 1.3;
+        }
+        .tag-attack    { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+        .tag-recycle   { background: #E0E7FF; color: #4338CA; border: 1px solid #C7D2FE; }
+        .tag-sister    { background: #FCE7F3; color: #BE185D; border: 1px solid #FBCFE8; }
+        .tag-soulless  { background: #F3F4F6; color: #4B5563; border: 1px solid #E5E7EB; }
+        .tag-immortal  { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+        .tag-special   { background: #F3E8FF; color: #7E22CE; border: 1px solid #E9D5FF; }
+
+        /* 卡面描述与实际逻辑说明 */
+        .card-desc-box {
+            background: var(--bg-sidebar);
+            border-left: 3.5px solid var(--gold);
+            padding: 10px 14px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 12px;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+        }
+        .card-desc-box .label {
+            font-family: var(--font-sans);
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 3px;
+            display: block;
+        }
+        .card-actual-box {
+            background: #FAF7F2;
+            border: 1px dashed var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            font-size: 0.86rem;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+        .card-actual-box .label {
+            font-family: var(--font-sans);
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .card-extra-note {
+            font-size: 0.8rem;
+            color: #8C6D1F;
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-top: 4px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .card-extra-note i {
+            margin-top: 2px;
+            color: #D97706;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2rem; }
+            .rules-panel { padding: 24px 20px; }
+            .filter-toolbar { flex-direction: column; align-items: stretch; }
+            .cards-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 页眉 (由 resources/layout.js 统一从 resources/header.html 载入) ===== -->
+    <div id="site-header"></div>
+
+    <main class="container">
+        <!-- 页面头部 -->
+        <header class="page-header">
+            <div class="breadcrumbs">
+                <a href="index.html"><i class="fas fa-home"></i> 首页</a>
+                <span>/</span>
+                <a href="games.html"><i class="fas fa-gamepad"></i> 游戏体验</a>
+                <span>/</span>
+                <span>卡牌机制详细介绍</span>
+            </div>
+            <h1>《幻想城·遗失的能力》卡牌数据与机制详解</h1>
+            <p>基于游戏本体 v1.0 全量卡牌数据，详细梳理卡面描述、底层触发时机与优先级判定规则。</p>
+        </header>
+
+        <!-- 核心机制与顺序规则说明 -->
+        <section class="rules-panel">
+            <h2 class="rules-title"><i class="fas fa-project-diagram"></i> 机制规则与效果结算顺序</h2>
+            <div class="rules-grid">
+                <div class="rule-box">
+                    <h3><i class="fas fa-bolt"></i> 攻击前效果 (优先级体系)</h3>
+                    <p>
+                        根据<strong>优先级从低到高</strong>排序触发（<strong>优先级数值越小越先触发</strong>，例如优先级 0 先于优先级 1；特殊卡牌如 A 优先级为 -666）。同优先级卡牌按随机顺序结算。
+                    </p>
+                </div>
+                <div class="rule-box">
+                    <h3><i class="fas fa-fist-raised"></i> 攻击时 / 击破 / 被击破 / 攻击后</h3>
+                    <p>
+                        根据场上卡牌的攻击/被攻击顺序，<strong>从左到右依次触发</strong>。技能包括治疗、手牌检索、状态施加或场地衍生。
+                    </p>
+                </div>
+                <div class="rule-box">
+                    <h3><i class="fas fa-shield-alt"></i> 特殊状态说明</h3>
+                    <p>
+                        <strong>控制</strong>：阻止对应卡牌进行攻击或释放攻击前技能。<br>
+                        <strong>孤独的灵魂</strong>：场地额外效果，使双方在场地上无法放置超过一张卡牌。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 交互过滤与搜索栏 -->
+        <div class="filter-toolbar">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="cardSearchInput" class="search-input" placeholder="搜索卡牌名称、技能描述或效果关键字..." />
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">全部 (<span id="totalCardsCount">35</span>)</button>
+                <button class="filter-btn" data-filter="attack">攻击性卡牌</button>
+                <button class="filter-btn" data-filter="recycle">回转类卡牌</button>
+                <button class="filter-btn" data-filter="sister">妹妹卡牌</button>
+                <button class="filter-btn" data-filter="soulless">无灵魂/衍生</button>
+                <button class="filter-btn" data-filter="special">特殊与隐藏</button>
+            </div>
+        </div>
+
+        <!-- 卡牌列表网格 -->
+        <section class="cards-container" id="cardsGrid">
+            <!-- 动态生成卡牌卡片 -->
+        </section>
+    </main>
+
+    <!-- ===== 页脚 (由 resources/layout.js 统一从 resources/footer.html 载入) ===== -->
+    <div id="site-footer"></div>
+
+    <script>
+        // 全量卡牌数据 (依照官方数据表顺序)
+        const CARDS_DATA = [
+            {
+                name: "西药",
+                cost: 2,
+                atk: 1,
+                hp: 5,
+                aiCost: 2,
+                tags: ["攻击性卡牌", "回转类卡牌"],
+                category: ["attack", "recycle"],
+                cardDesc: "治疗两侧卡牌任意一张至满血",
+                actualEffect: "攻击后，检索两侧位置，随机选择有卡牌的位置中的一个，将对应的卡牌回复999点血量（不超过血量上限）",
+                extraNote: ""
+            },
+            {
+                name: "呋喃",
+                cost: 2,
+                atk: 1,
+                hp: 5,
+                aiCost: 3,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "敌方伤害最高者下回合无法攻击",
+                actualEffect: "攻击后，选中敌方所有伤害最高的卡牌中最左侧的卡牌，如果对应卡牌无特殊效果则施加特殊效果“控制”直至对应卡牌的阵营的攻击回合结束",
+                extraNote: "“控制”特殊效果能够阻止对应卡牌进行攻击/进行攻击前技能的释放"
+            },
+            {
+                name: "晨曦",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 1.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "左右两者伤害变为其中较高的伤害",
+                actualEffect: "攻击前（优先级4），检索两侧位置，都存在带有“攻击性卡牌”标记的卡牌时，将攻击力较低一方的攻击力增加二者攻击力的差直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "Echo",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 2,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "若其对决的牌血量最高则攻击力+2",
+                actualEffect: "攻击前（优先级3），检索对方已上场的卡牌，若自己攻击的位置存在卡牌且被检索的卡牌中没有血量超过对应卡牌的，则将自己的攻击力增加2点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "JY",
+                cost: 2,
+                atk: 2,
+                hp: 5,
+                aiCost: 3.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "攻击力随机+1/+2",
+                actualEffect: "攻击前（优先级1），将自己的攻击力随机增加1点或2点直至双方回合结束（二者概率相等）",
+                extraNote: ""
+            },
+            {
+                name: "瑞比",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 1.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "攻击叠加左右随机侧的伤害",
+                actualEffect: "攻击前（优先级4），检索两侧位置，选择检索到的卡牌的任意一项，如果对应卡牌带有“攻击性卡牌”标记且攻击力>0，则将自己的攻击力增加对应卡牌的攻击力直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "蜜桃",
+                cost: 1,
+                atk: 1,
+                hp: 3,
+                aiCost: 1,
+                tags: ["攻击性卡牌", "回转类卡牌"],
+                category: ["attack", "recycle"],
+                cardDesc: "攻击时在两侧空位生成[古树]",
+                actualEffect: "攻击前（优先级5），如果场地额外效果不为“孤独的灵魂”，则检索两侧位置，在检索到的所有空格上放置“古树”卡牌（卡牌的数据与正常数据相同）",
+                extraNote: "场地额外效果“孤独的灵魂”会使双方都无法在对应方场地上放置超过一张卡牌"
+            },
+            {
+                name: "塔塔",
+                cost: 2,
+                atk: 2,
+                hp: 4,
+                aiCost: 3.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "若天平向对方倾斜则攻击力+2",
+                actualEffect: "攻击前（优先级1），如果自己为玩家方且天平数值<0或自己为非玩家方且天平数值>0，则将自己的攻击力增加2直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "安然",
+                cost: 2,
+                atk: 2,
+                hp: 4,
+                aiCost: 2,
+                tags: ["攻击性卡牌", "回转类卡牌"],
+                category: ["attack", "recycle"],
+                cardDesc: "攻击位置无牌则添加无灵魂手牌",
+                actualEffect: "攻击时，如果自己攻击的位置不存在卡牌且自己是玩家方卡牌，则往手牌中加入一张带有“无灵魂卡牌”标记的卡牌",
+                extraNote: ""
+            },
+            {
+                name: "星空",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 1.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "血量下降至1时攻击力+2",
+                actualEffect: "攻击前（优先级1），如果自己的血量为1点，则将自己的攻击力增加2点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "尾兜",
+                cost: 2,
+                atk: 2,
+                hp: 4,
+                aiCost: 2,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "星空在场时每回合血量+1",
+                actualEffect: "攻击后，检索己方已上场的卡牌，如果卡牌中存在“星空”则将自己的血量回复1点（不超过血量上限）",
+                extraNote: ""
+            },
+            {
+                name: "云落",
+                cost: 1,
+                atk: 1,
+                hp: 5,
+                aiCost: 1,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "被击破在原位置生成[奇幻堡垒]",
+                actualEffect: "被击破时，在自己的位置放置“奇幻堡垒”卡牌（卡牌的数据与正常数据相同）",
+                extraNote: ""
+            },
+            {
+                name: "Achy",
+                cost: 2,
+                atk: 3,
+                hp: 5,
+                aiCost: 3.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "被击破后天平向自己方向倾斜1",
+                actualEffect: "被击破时，如果是玩家方卡牌则将天平数值增加1，否则将天平数值增加-1",
+                extraNote: ""
+            },
+            {
+                name: "冰火",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 1,
+                tags: ["攻击性卡牌", "隐藏卡牌"],
+                category: ["attack", "special"],
+                cardDesc: "攻击方式为攻击左右随机侧敌人",
+                actualEffect: "攻击时，将自己攻击的位置改为自己初始攻击的位置的两侧位置中随机一个存在的位置",
+                extraNote: "目前这张卡不存在于正常游戏中（隐藏卡牌）"
+            },
+            {
+                name: "混沌",
+                cost: 2,
+                atk: 2,
+                hp: 4,
+                aiCost: 2.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "对方卡牌数量>3则攻击力+1",
+                actualEffect: "攻击前（优先级3），检索对方已上场的卡牌，若检索到的卡牌数量大于3，则将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "米花",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 1.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "攻击位置无牌则不攻击并血量+1",
+                actualEffect: "攻击时，如果自己攻击的位置不存在卡牌，则跳过这次攻击并将自己的血量回复1点",
+                extraNote: ""
+            },
+            {
+                name: "Christina",
+                cost: 1,
+                atk: 3,
+                hp: 4,
+                aiCost: 3,
+                tags: ["攻击性卡牌", "回转类卡牌", "妹妹卡牌"],
+                category: ["attack", "recycle", "sister"],
+                cardDesc: "被击破后回到手牌",
+                actualEffect: "被击破时，如果自己是玩家方卡牌，则往手牌中加入一张“Christina”",
+                extraNote: ""
+            },
+            {
+                name: "Cendy",
+                cost: 1,
+                atk: 2,
+                hp: 4,
+                aiCost: 2.5,
+                tags: ["攻击性卡牌", "妹妹卡牌"],
+                category: ["attack", "sister"],
+                cardDesc: "对方卡牌数>2时伤害+1",
+                actualEffect: "攻击前（优先级3），检索对方已上场的卡牌，若检索到的卡牌数量大于2，则将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "Candace",
+                cost: 1,
+                atk: 2,
+                hp: 4,
+                aiCost: 2.5,
+                tags: ["攻击性卡牌", "妹妹卡牌"],
+                category: ["attack", "sister"],
+                cardDesc: "对方卡牌数<3时伤害+1",
+                actualEffect: "攻击前（优先级3），检索对方已上场的卡牌，若检索到的卡牌数量小于3，则将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "Clara",
+                cost: 1,
+                atk: 0,
+                hp: 4,
+                aiCost: 3,
+                tags: ["攻击性卡牌", "妹妹卡牌"],
+                category: ["attack", "sister"],
+                cardDesc: "攻击力为己方在场妹妹卡牌数量",
+                actualEffect: "攻击前（优先级0），检索己方已上场的卡牌，每检索到一个带有“妹妹卡牌”标记的卡牌，均将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "Caitlan",
+                cost: 1,
+                atk: 2,
+                hp: 3,
+                aiCost: 2,
+                tags: ["攻击性卡牌", "妹妹卡牌"],
+                category: ["attack", "sister"],
+                cardDesc: "Caitlin在场则伤害+1",
+                actualEffect: "攻击前（优先级1），检索己方已上场的卡牌，如果卡牌中存在“Caitlin”则将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "Caitlin",
+                cost: 1,
+                atk: 2,
+                hp: 3,
+                aiCost: 2,
+                tags: ["攻击性卡牌", "妹妹卡牌"],
+                category: ["attack", "sister"],
+                cardDesc: "Caitlan在场则伤害+1",
+                actualEffect: "攻击前（优先级1），检索己方已上场的卡牌，如果卡牌中存在“Caitlan”则将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "整体意识",
+                cost: 3,
+                atk: 0,
+                hp: 12,
+                aiCost: 5,
+                tags: ["攻击性卡牌", "核心支援"],
+                category: ["attack", "sister"],
+                cardDesc: "为所有己方妹妹卡牌提供攻击力+1",
+                actualEffect: "攻击前（优先级0），检索己方已上场的卡牌，每检索到一个带有“妹妹卡牌”标记的卡牌，均将该卡牌的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "皮尔",
+                cost: 2,
+                atk: 2,
+                hp: 5,
+                aiCost: 2,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "敌方卡牌=5时伤害+1",
+                actualEffect: "攻击前（优先级3），检索对方已上场的卡牌，若检索到的卡牌数量等于5，则将自己的攻击力增加1点直至双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "虚无的灵魂",
+                cost: 0,
+                atk: -1,
+                hp: 1,
+                aiCost: 0,
+                tags: ["无灵魂卡牌", "衍生物"],
+                category: ["soulless"],
+                cardDesc: "无",
+                actualEffect: "无攻击判定（不攻击）",
+                extraNote: ""
+            },
+            {
+                name: "古树",
+                cost: 0,
+                atk: -1,
+                hp: 2,
+                aiCost: 0,
+                tags: ["无灵魂卡牌", "衍生物"],
+                category: ["soulless"],
+                cardDesc: "无",
+                actualEffect: "无攻击判定（不攻击，由蜜桃等技能召唤生成）",
+                extraNote: ""
+            },
+            {
+                name: "奇幻堡垒",
+                cost: 0,
+                atk: -1,
+                hp: 3,
+                aiCost: 0,
+                tags: ["无灵魂卡牌", "衍生物"],
+                category: ["soulless"],
+                cardDesc: "无",
+                actualEffect: "无攻击判定（不攻击，云落被击破时在原位生成）",
+                extraNote: ""
+            },
+            {
+                name: "碎片",
+                cost: 0,
+                atk: 1,
+                hp: 1,
+                aiCost: 0,
+                tags: ["无灵魂卡牌", "特殊衍生"],
+                category: ["soulless", "special"],
+                cardDesc: "无",
+                actualEffect: "无攻击判定（不攻击，卡牌标记在 calculate.special% 达到要求值时激活）",
+                extraNote: "该卡牌在卡面上的名称为“碎片”（带有引号）"
+            },
+            {
+                name: "冰泉",
+                cost: 1,
+                atk: 1,
+                hp: 4,
+                aiCost: 1,
+                tags: ["攻击性卡牌", "回转类卡牌"],
+                category: ["attack", "recycle"],
+                cardDesc: "击杀敌人时添加随机牌到手牌",
+                actualEffect: "击破敌方时，如果自己是玩家方卡牌，则往手牌中加入一张随机卡牌（范围根据解锁表确定）",
+                extraNote: ""
+            },
+            {
+                name: "华安",
+                cost: 2,
+                atk: 1,
+                hp: 5,
+                aiCost: 1.5,
+                tags: ["攻击性卡牌", "回转类卡牌"],
+                category: ["attack", "recycle"],
+                cardDesc: "两侧牌被击破时添加对应牌到手牌",
+                actualEffect: "所有玩家方卡牌被击破时，检索两侧位置，如果检索的位置中存在“华安”卡牌，则往手牌中加入一张被击破的卡牌对应的卡牌",
+                extraNote: ""
+            },
+            {
+                name: "樱莲",
+                cost: 2,
+                atk: 3,
+                hp: 2,
+                aiCost: 4.5,
+                tags: ["攻击性卡牌", "特殊直伤"],
+                category: ["attack", "special"],
+                cardDesc: "攻击力转化为天平点数",
+                actualEffect: "攻击时，跳过对卡牌的攻击（直接对天平数值造成等量攻击力伤害）",
+                extraNote: ""
+            },
+            {
+                name: "未来",
+                cost: 2,
+                atk: 2,
+                hp: 4,
+                aiCost: 4.5,
+                tags: ["攻击性卡牌"],
+                category: ["attack"],
+                cardDesc: "攻击力附带对方对应位置攻击力",
+                actualEffect: "攻击前（优先级3），如果自己攻击的位置存在带有“攻击性卡牌”标记且攻击力>0的卡牌，则将自己的攻击力增加对应卡牌的攻击力直到双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "作者橡皮",
+                cost: 3,
+                atk: 2,
+                hp: 10,
+                aiCost: 5.5,
+                tags: ["攻击性卡牌", "强力Boss/高血量"],
+                category: ["attack", "special"],
+                cardDesc: "天平倾斜程度>5时，攻击力+2",
+                actualEffect: "攻击前（优先级1），如果天平数值的绝对值>5，则将自己的攻击力增加2直到双方回合结束",
+                extraNote: ""
+            },
+            {
+                name: "永生的灵魂",
+                cost: 0,
+                atk: 1,
+                hp: "3904577 (无限)",
+                aiCost: "不使用",
+                tags: ["永生的灵魂", "特殊叙事"],
+                category: ["special"],
+                cardDesc: "世界的湮灭对于我来说不过是惊鸿一瞥，我静静地在这里看着苍生。",
+                actualEffect: "无特殊结算逻辑（作为剧情与特殊意象存在）",
+                extraNote: "AI方不使用此卡"
+            },
+            {
+                name: "A",
+                cost: 0,
+                atk: 0,
+                hp: 5,
+                aiCost: "不使用",
+                tags: ["特殊卡牌", "逆转因果"],
+                category: ["special"],
+                cardDesc: "每次攻击会使逆转对对手有优势的天平",
+                actualEffect: "攻击前（优先级-666），持续将自己的血量增加-1点，一小段时间后将自己的血量增加-999点并删除自己，同时如果自己为玩家方卡牌且天平数值<0或自己为非玩家方卡牌且天平数值>0，则将天平数值设为其相反数",
+                extraNote: "AI方不使用此卡；优先级最高（-666），可瞬间逆转不利天平"
+            }
+        ];
+
+        function getTagClass(tag) {
+            if (tag.includes('攻击性')) return 'tag-attack';
+            if (tag.includes('回转')) return 'tag-recycle';
+            if (tag.includes('妹妹')) return 'tag-sister';
+            if (tag.includes('无灵魂') || tag.includes('衍生')) return 'tag-soulless';
+            if (tag.includes('永生')) return 'tag-immortal';
+            return 'tag-special';
+        }
+
+        function renderCards(list) {
+            const grid = document.getElementById('cardsGrid');
+            if (!list || list.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <i class="far fa-folder-open"></i>
+                        <p>未找到匹配的卡牌数据，请尝试更换搜索关键字或筛选条件。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            list.forEach(card => {
+                const atkDisplay = typeof card.atk === 'number' && card.atk < 0 ? '不攻击' : card.atk;
+                const tagsHtml = card.tags.map(t => `<span class="tag-badge ${getTagClass(t)}">${t}</span>`).join('');
+                const extraNoteHtml = card.extraNote ? `
+                    <div class="card-extra-note">
+                        <i class="fas fa-info-circle"></i>
+                        <span>${card.extraNote}</span>
+                    </div>
+                ` : '';
+
+                html += `
+                    <article class="card-item" data-category="${card.category.join(' ')}">
+                        <div class="card-item-top">
+                            <div class="card-name-wrap">
+                                <h3 class="card-title">${card.name}</h3>
+                            </div>
+                            <div class="card-stats-badges">
+                                <span class="stat-chip chip-cost" title="玩家消耗费用"><i class="fas fa-coins"></i> ${card.cost} 费</span>
+                                <span class="stat-chip chip-atk" title="攻击力"><i class="fas fa-fist-raised"></i> ${atkDisplay}</span>
+                                <span class="stat-chip chip-hp" title="生命值"><i class="fas fa-heart"></i> ${card.hp}</span>
+                                <span class="chip-ai-cost" title="AI使用费用">AI: ${card.aiCost}</span>
+                            </div>
+                        </div>
+
+                        <div class="card-tags">
+                            ${tagsHtml}
+                        </div>
+
+                        <div class="card-desc-box">
+                            <span class="label"><i class="fas fa-quote-left"></i> 卡面描述</span>
+                            <p>${card.cardDesc}</p>
+                        </div>
+
+                        <div class="card-actual-box">
+                            <span class="label"><i class="fas fa-cogs"></i> 底层实际效果</span>
+                            <p>${card.actualEffect}</p>
+                            ${extraNoteHtml}
+                        </div>
+                    </article>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // 初始化过滤与搜索交互
+        let currentFilter = 'all';
+        let currentKeyword = '';
+
+        function applyFilter() {
+            const keyword = currentKeyword.trim().toLowerCase();
+            const filtered = CARDS_DATA.filter(card => {
+                const matchCategory = currentFilter === 'all' || card.category.includes(currentFilter);
+                if (!matchCategory) return false;
+
+                if (!keyword) return true;
+                const fullText = (card.name + ' ' + card.cardDesc + ' ' + card.actualEffect + ' ' + (card.extraNote || '') + ' ' + card.tags.join(' ')).toLowerCase();
+                return fullText.includes(keyword);
+            });
+            renderCards(filtered);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards(CARDS_DATA);
+            document.getElementById('totalCardsCount').textContent = CARDS_DATA.length;
+
+            const searchInput = document.getElementById('cardSearchInput');
+            searchInput.addEventListener('input', (e) => {
+                currentKeyword = e.target.value;
+                applyFilter();
+            });
+
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.getAttribute('data-filter');
+                    applyFilter();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

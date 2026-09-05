@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>幻想城 · 遗失的能力 在线体验</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- 统一页眉页脚样式与脚本 -->
+    <link rel="stylesheet" href="resources/layout.css" />
+    <script src="resources/layout.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-page: #FDF5ED;
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #F8F0E8;
+            --bg-dark: #1A1412;
+            --text-primary: #3D2B1F;
+            --text-secondary: #5A4A3A;
+            --text-light: #8A7A6A;
+            --accent: #C0392B;
+            --accent-hover: #A93226;
+            --accent-glow: rgba(192, 57, 43, 0.35);
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --border-light: #E8DDD2;
+            --shadow-soft: 0 8px 30px rgba(61, 43, 31, 0.08);
+            --shadow-hover: 0 16px 48px rgba(61, 43, 31, 0.16);
+            --radius: 16px;
+            --radius-sm: 8px;
+            --radius-pill: 40px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-serif: 'Noto Serif SC', 'Songti SC', 'Georgia', serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.75;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(240, 220, 205, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(245, 230, 215, 0.5) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        /* ---------- 导航栏 ---------- */
+        .navbar {
+            background: rgba(253, 245, 237, 0.55);
+            border-bottom: 1px solid rgba(232, 221, 210, 0.48);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            box-shadow: 0 4px 20px rgba(61, 43, 31, 0.04);
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .nav-brand {
+            font-size: 1.45rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            letter-spacing: -0.01em;
+            transition: var(--transition);
+        }
+        .nav-brand:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .nav-brand span.subtitle {
+            font-size: 0.82rem;
+            font-family: var(--font-sans);
+            color: var(--text-light);
+            font-weight: 500;
+            margin-left: 4px;
+            padding-left: 10px;
+            border-left: 1px solid var(--border-light);
+        }
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .nav-links a {
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            background: transparent;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .nav-links a.icon-only {
+            padding: 8px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            gap: 0;
+            font-size: 1rem;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25);
+        }
+
+        /* ---------- 页面头部介绍 ---------- */
+        .page-hero {
+            padding: 42px 0 26px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        .page-hero p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            font-weight: 600;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* ---------- 精致游戏展示框 ---------- */
+        .game-showcase-container {
+            margin: 10px auto 50px;
+            max-width: 1050px;
+        }
+
+        .game-box-frame {
+            background: #141110;
+            border-radius: 20px;
+            border: 1px solid #332822;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(26, 20, 18, 0.35),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+        .game-box-frame:hover {
+            box-shadow: 
+                0 24px 70px rgba(192, 57, 43, 0.2),
+                0 0 0 1px rgba(212, 175, 55, 0.2);
+        }
+
+        /* 顶部精致控制栏 (模拟极简复古终端/Mac风格) */
+        .game-top-bar {
+            background: #201916;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #362923;
+            color: #E2D7CE;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+        }
+        .window-dots {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-red { background: #FF5F56; }
+        .dot-yellow { background: #FFBD2E; }
+        .dot-green { background: #27C93F; }
+
+        .game-status-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #F0E6DD;
+        }
+        .game-status-label .live-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2ecc71;
+            animation: pulseDot 2s infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .game-controls-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ctrl-btn {
+            background: #2C221D;
+            border: 1px solid #44342C;
+            color: #EAE1D9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+        .ctrl-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* 游戏视口与嵌入区域 */
+        .game-viewport {
+            width: 100%;
+            position: relative;
+            background: #000000;
+            aspect-ratio: 16 / 10;
+            max-height: 640px;
+            min-height: 460px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ---------- 全屏模式专属样式 (消除所有多余黑边与空隙，全方位自适应铺满) ---------- */
+        .game-box-frame:fullscreen,
+        .game-box-frame:-webkit-full-screen,
+        .game-box-frame.is-fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: #000000 !important;
+            box-shadow: none !important;
+        }
+
+        .game-box-frame:fullscreen .game-top-bar,
+        .game-box-frame:-webkit-full-screen .game-top-bar,
+        .game-box-frame.is-fullscreen .game-top-bar {
+            flex-shrink: 0;
+            padding: 8px 18px;
+            background: #18110E;
+            border-bottom: 1px solid #2B1F19;
+            z-index: 20;
+        }
+
+        .game-box-frame:fullscreen .game-bottom-bar,
+        .game-box-frame:-webkit-full-screen .game-bottom-bar,
+        .game-box-frame.is-fullscreen .game-bottom-bar {
+            display: none !important;
+        }
+
+        .game-box-frame:fullscreen .game-viewport,
+        .game-box-frame:-webkit-full-screen .game-viewport,
+        .game-box-frame.is-fullscreen .game-viewport {
+            flex: 1 1 0% !important;
+            width: 100vw !important;
+            height: calc(100vh - 44px) !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            aspect-ratio: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #000000 !important;
+        }
+
+        .game-box-frame:fullscreen #gameIframe,
+        .game-box-frame:-webkit-full-screen #gameIframe,
+        .game-box-frame.is-fullscreen #gameIframe {
+            width: 100% !important;
+            height: 100% !important;
+            flex: 1 1 0% !important;
+            display: block !important;
+            border: none !important;
+        }
+
+        /* 尚未启动时的精致海报封面 */
+        .game-cover-poster {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, #261618 0%, #0F0A0B 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+            transition: opacity 0.5s ease;
+        }
+        .cover-art-badge {
+            width: 90px;
+            height: 90px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--accent), #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            color: #fff;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            animation: floatBadge 3s ease-in-out infinite alternate;
+        }
+        @keyframes floatBadge {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+        .cover-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            letter-spacing: 0.04em;
+            background: linear-gradient(90deg, #FFFFFF, #EAD7C5, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cover-desc {
+            color: #BDB0A4;
+            font-family: var(--font-sans);
+            font-size: 0.98rem;
+            max-width: 480px;
+            margin-bottom: 26px;
+            line-height: 1.6;
+        }
+        .play-launch-btn {
+            background: linear-gradient(135deg, var(--accent), #D35400);
+            border: none;
+            color: #fff;
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 14px 38px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 25px var(--accent-glow);
+            transition: var(--transition);
+        }
+        .play-launch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(211, 84, 0, 0.5);
+            background: linear-gradient(135deg, var(--accent-hover), #E67E22);
+        }
+        .cover-meta-info {
+            margin-top: 18px;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: #7D7065;
+            display: flex;
+            gap: 16px;
+        }
+
+        /* 游戏 iframe */
+        #gameIframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            background: #000;
+        }
+
+        /* 底部信息条 */
+        .game-bottom-bar {
+            background: #1B1411;
+            padding: 12px 20px;
+            border-top: 1px solid #332720;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            color: #A39385;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .game-bottom-bar .tips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-bottom-bar .tips i {
+            color: var(--gold);
+        }
+
+        /* ---------- 游戏资讯与设定区域 ---------- */
+        .game-info-grid {
+            display: grid;
+            grid-template-columns: 1.85fr 1.15fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+        .info-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            padding: 32px 30px;
+            box-shadow: var(--shadow-soft);
+        }
+        .info-card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-card h3 i {
+            color: var(--accent);
+        }
+        .info-card h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 22px 0 10px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.98rem;
+            line-height: 1.88;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        .story-quote {
+            background: var(--bg-sidebar);
+            border-left: 4px solid var(--accent);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-style: italic;
+            margin: 14px 0;
+            color: var(--text-primary);
+        }
+
+        /* 外部链接引出列表 */
+        .external-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .external-link-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 16px;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        .external-link-item:hover {
+            background: #fff;
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateX(4px);
+            box-shadow: 0 4px 14px rgba(192, 57, 43, 0.1);
+        }
+        .external-link-item .badge-icon {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-right: 8px;
+        }
+
+        /* 制作组成员徽章 */
+        .credits-container {
+            background: linear-gradient(135deg, #FBF4EB, #F2E3D5);
+            border: 1px solid #E5D2C2;
+            border-radius: var(--radius-sm);
+            padding: 18px;
+            margin-top: 18px;
+        }
+        .credits-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .credits-title i {
+            color: var(--gold);
+        }
+        .members-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .member-tag {
+            background: #fff;
+            border: 1px solid #DFD0C2;
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .member-tag i {
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+
+        .novel-banner-card {
+            background: linear-gradient(135deg, #FAF1E8, #F4E2D2);
+            border: 1px solid #E4CEBD;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .banner-btn {
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .banner-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(192, 57, 43, 0.25);
+        }
+
+        /* ---------- 页脚 ---------- */
+        .footer {
+            margin-top: auto;
+            padding: 36px 0 28px;
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.88rem;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .footer .footer-links {
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+        }
+        .footer .footer-links a {
+            color: var(--text-secondary);
+        }
+        .footer .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 900px) {
+            .game-info-grid {
+                grid-template-columns: 1fr;
+            }
+            .game-viewport {
+                min-height: 380px;
+            }
+            .cover-title {
+                font-size: 1.7rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .navbar .container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            .game-top-bar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .game-viewport {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 页眉 (由 resources/layout.js 统一从 resources/header.html 载入) ===== -->
+    <div id="site-header"></div>
+
+    <!-- ===== 页面头部 ===== -->
+    <header class="page-hero">
+        <div class="container">
+            <h1>幻想城·遗失的能力</h1>
+            <h2>Fantasy City : Lost</h2>
+            <p>沉溺于最绮丽的幻想之中……</p>
+        </div>
+    </header>
+
+    <!-- ===== 游戏核心精致展示框 ===== -->
+    <main class="container game-showcase-container">
+        <div class="game-box-frame" id="gameFrameContainer">
+            <!-- 顶部控制条 -->
+            <div class="game-top-bar">
+                <div class="window-dots">
+                    <span class="dot dot-red" title="关闭"></span>
+                    <span class="dot dot-yellow" title="最小化"></span>
+                    <span class="dot dot-green" title="全屏"></span>
+                </div>
+                <div class="game-status-label">
+                    <span class="live-badge"></span>
+                    <span>幻想城·遗失的能力</span>
+                </div>
+                <div class="game-controls-actions">
+                    <button class="ctrl-btn" id="reloadGameBtn" title="重新启动游戏"><i class="fas fa-redo-alt"></i> 重载</button>
+                    <a href="resources/Fantasy City Lost.html" target="_blank" class="ctrl-btn" title="在新标签页独立全屏运行"><i class="fas fa-external-link-alt"></i> 新窗口</a>
+                    <button class="ctrl-btn" id="fullscreenBtn" title="全屏运行展示框"><i class="fas fa-expand"></i> 全屏</button>
+                </div>
+            </div>
+
+            <!-- 游戏主视口 (内嵌 Fantasy City Lost.html) -->
+            <div class="game-viewport" id="gameViewport">
+                <!-- 初始海报遮罩：节省初始带宽与内存，点击后平滑加载 -->
+                <div class="game-cover-poster" id="gameCoverPoster">
+                    <button class="play-launch-btn" id="startPlayBtn">
+                        <i class="fas fa-play"></i> 启动体验
+                    </button>
+                </div>
+
+                <!-- 游戏 iframe -->
+                <iframe id="gameIframe" title="Fantasy City Lost Game Frame" allow="fullscreen; autoplay; gamepad"></iframe>
+            </div>
+
+            <!-- 底部状态与提示条 -->
+            <div class="game-bottom-bar">
+                <div class="tips">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>初次加载时间较长，推荐在电脑端使用键盘与鼠标获得最佳体验。</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏介绍与站外链接引出 -->
+        <div class="game-info-grid" style="margin-top: 40px;">
+            <!-- 左侧：背景故事与机制设计 -->
+            <div class="info-card">
+                <h3><i class="fas fa-scroll"></i> 游戏背景</h3>
+                <p>
+                    大地变为废土，生物灰飞烟灭。只有结构的断裂声宣告着这个世界曾经存在过。随着时间流逝，声音越发微弱。有些人消失于此，没人知道他们是慢慢销声匿迹还是被痛苦带走了。那股名为“作者”的力量摧毁了这里。秒针的震颤，生命在悄然流逝。治疗系的能力最先破灭，能量胶质冲破了头脑，化为虚无的怨灵；没人愿意再为幻想之塔的第二次毁灭送别了，碎片化的信息覆盖在塔的周围，天空和大地上都笼罩着雾。痛苦的记忆盘旋在头脑上空，被暴雨裹挟着的一切的记忆流入世界边缘。妹妹们的荷载尽管并没有被信息风暴摧毁，但是也即将湮灭于幻想之中。
+                <p>
+                    被积压在塔内的灵魂还没有消散，而它们注定无法获取真正的安身之所。无形的力量控制了这里，并将所有人的能量胶质收集起来。没人知道它想干什么。
+                </p>
+                <div class="story-quote">
+                    “未来”是可以改变的吗…… 我想到了这里，拿起手中的卡牌。<br>
+                    他告诉我，一切都毁灭了，毁灭了。但是我不愿相信，更不愿意放下和那些朋友的羁绊。我重整装备，向着真正的“未来”出发。
+                </div>
+                <p>
+                    这个想法来源于我在2022年开始书写的原创长篇连载小说《幻想城》。里面的人物名字和能力来源大多都是我曾经朋友的火柴人OC名字。他们大多数现在已经逐渐淡出我的生活，但是我用着留有他们痕迹的名字在这三年中创建了一个又一个章节。这个作品，不仅仅是为了我而做的，更是我长久以来给《幻想城》画下的一个愿望。
+                </p>
+
+                <h4><i class="fas fa-layer-group"></i> 游戏机制</h4>
+                <p>
+                    主要的机制来源于《邪恶铭刻》的撕牌，这个玩法在URM隐藏章节也出现过。玩家需要消耗在场的卡牌来放置新生的卡牌。自己的卡牌需要谨慎规划，对手的卡牌生生不息。与此同时，不同卡牌的人物结合《幻想城》原作的背景文字产生的技能丰富多样，玩家同样需要思考如何搭配已有的卡组进行巧妙配合击败对手。通过合理规划卡牌的使用，使天平偏向自己，从而一步一步解开那个遗失的真相。
+                </p>
+
+                <h4><i class="fas fa-palette"></i> 美术风格</h4>
+                <p>
+                    美术风格采用了8-bit像素风，使代入感增强。同时还有画师原创的30+卡牌牌面设计，丰富而有趣。
+                </p>
+             </div>
+            <!-- 右侧：站外体验/宣发链接与制作组 -->
+            <div class="info-card">
+                <h3><i class="fas fa-external-link-alt"></i> 体验与宣发链接</h3>
+                <ul class="external-links-list">
+                    <li>
+                        <a href="cards.html" class="external-link-item">
+                            <span><i class="fas fa-layer-group badge-icon"></i> 卡牌机制详细介绍</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.bilibili.com/video/BV1S2iLeVE8p" target="_blank" class="external-link-item">
+                            <span><i class="fab fa-bilibili badge-icon" style="color:#00A1D6;"></i> 全流程通关实况</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.bilibili.com/video/BV1EtiLe4EhU" target="_blank" class="external-link-item">
+                            <span><i class="fab fa-bilibili badge-icon" style="color:#FB7299;"></i> 游戏宣传MV</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.taptap.cn/app/723654" target="_blank" class="external-link-item">
+                            <span><i class="fas fa-fire badge-icon" style="color:#00CEC9;"></i> TapTap 宣发主页</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://gitblock.cn/Projects/1220321" target="_blank" class="external-link-item">
+                            <span>A营&nbsp;在线体验·史诗级精华</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://world.xiaomawang.com/community/main/compose/oVgF666J" target="_blank" class="external-link-item">
+                            <span>小码王&nbsp;在线体验</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.ccw.site/detail/669e612528d4db0bb6aeea81" target="_blank" class="external-link-item">
+                            <span>共创世界&nbsp;在线体验</span>
+                            <i class="fas fa-chevron-right" style="font-size:0.75rem;opacity:0.6;"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- 制作组成员 -->
+                <div class="credits-container">
+                    <div class="credits-title">
+                        制作组成员
+                    </div>
+                    <div class="members-tags">
+                        <span class="member-tag">XRJ</span>
+                        <span class="member-tag">littlesl</span>
+                        <span class="member-tag">cuidaio</span>
+                        <span class="member-tag">wx-物想</span>
+                        <span class="member-tag">Salmontata</span>
+                        <span class="member-tag">整体意识</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== 页脚 (由 resources/layout.js 统一从 resources/footer.html 载入) ===== -->
+    <div id="site-footer"></div>
+
+    <script>
+        const startPlayBtn = document.getElementById('startPlayBtn');
+        const gameCoverPoster = document.getElementById('gameCoverPoster');
+        const gameIframe = document.getElementById('gameIframe');
+        const reloadGameBtn = document.getElementById('reloadGameBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const gameFrameContainer = document.getElementById('gameFrameContainer');
+
+        const GAME_SOURCE_URL = 'resources/Fantasy City Lost.html';
+
+        // 启动游戏
+        function launchGame() {
+            if (!gameIframe.src || gameIframe.src === 'about:blank') {
+                gameIframe.src = GAME_SOURCE_URL;
+            }
+            gameCoverPoster.style.opacity = '0';
+            setTimeout(() => {
+                gameCoverPoster.style.display = 'none';
+                gameIframe.style.display = 'block';
+            }, 400);
+        }
+
+        startPlayBtn.addEventListener('click', launchGame);
+
+        // 重载游戏
+        reloadGameBtn.addEventListener('click', () => {
+            if (gameIframe.style.display === 'block') {
+                gameIframe.src = GAME_SOURCE_URL;
+            } else {
+                launchGame();
+            }
+        });
+
+        // 全屏切换函数
+        function toggleFullscreen() {
+            // 如果尚未启动游戏，点击全屏时自动启动游戏
+            if (gameCoverPoster.style.display !== 'none') {
+                launchGame();
+            }
+
+            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            if (!isFs) {
+                if (gameFrameContainer.requestFullscreen) {
+                    gameFrameContainer.requestFullscreen();
+                } else if (gameFrameContainer.webkitRequestFullscreen) {
+                    gameFrameContainer.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        // 绑定绿色窗口控制点
+        const dotGreen = document.querySelector('.dot-green');
+        if (dotGreen) {
+            dotGreen.style.cursor = 'pointer';
+            dotGreen.addEventListener('click', toggleFullscreen);
+        }
+
+        // 监听全屏状态变化，动态更新按钮文案与类名
+        function handleFullscreenChange() {
+            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            if (isFs) {
+                gameFrameContainer.classList.add('is-fullscreen');
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
+                fullscreenBtn.title = '退出全屏 (Esc)';
+            } else {
+                gameFrameContainer.classList.remove('is-fullscreen');
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
+                fullscreenBtn.title = '全屏运行展示框';
+            }
+        }
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    </script>
+</body>
+</html>

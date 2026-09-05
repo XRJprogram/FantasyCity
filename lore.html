@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>世界观与角色设定 · FantasyCity 幻想城</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- 统一页眉页脚样式与脚本 -->
+    <link rel="stylesheet" href="resources/layout.css" />
+    <script src="resources/layout.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-page: #FDF5ED;
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #F8F0E8;
+            --bg-dark: #1E1714;
+            --text-primary: #3D2B1F;
+            --text-secondary: #5A4A3A;
+            --text-light: #8A7A6A;
+            --accent: #C0392B;
+            --accent-hover: #A93226;
+            --accent-soft: rgba(192, 57, 43, 0.08);
+            --gold: #D4AF37;
+            --gold-soft: rgba(212, 175, 55, 0.15);
+            --border-light: #E8DDD2;
+            --shadow-soft: 0 10px 30px rgba(61, 43, 31, 0.06);
+            --shadow-hover: 0 16px 45px rgba(61, 43, 31, 0.12);
+            --radius: 18px;
+            --radius-sm: 10px;
+            --radius-pill: 40px;
+            --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-serif: 'Noto Serif SC', 'Songti SC', 'SimSun', 'Georgia', serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.75;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 15%, rgba(240, 220, 205, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 90% 40%, rgba(245, 230, 215, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 30% 85%, rgba(248, 225, 208, 0.4) 0%, transparent 45%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        /* ---------- 页面头部 ---------- */
+        .page-header {
+            padding: 45px 0 25px;
+            text-align: center;
+        }
+        .breadcrumbs {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        .breadcrumbs a {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.12rem;
+            max-width: 720px;
+            margin: 0 auto 20px;
+        }
+
+        /* ---------- 区域通用标题 ---------- */
+        .section-header {
+            text-align: center;
+            margin: 40px 0 32px;
+        }
+        .section-header .section-tag {
+            font-family: var(--font-sans);
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ---------- 世界观设定卡片网格 ---------- */
+        .lore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 26px;
+            margin-bottom: 60px;
+        }
+        .lore-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            padding: 30px 26px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .lore-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+            border-color: #DCCEC1;
+        }
+        .lore-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .lore-card:hover::before {
+            opacity: 1;
+        }
+        .lore-icon-wrap {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 18px;
+            transition: var(--transition);
+        }
+        .lore-card:hover .lore-icon-wrap {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.05);
+        }
+        .lore-card h3 {
+            font-size: 1.28rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        .lore-card p {
+            color: var(--text-secondary);
+            font-size: 0.94rem;
+            line-height: 1.7;
+            flex: 1;
+        }
+
+        /* ---------- 角色过滤与搜索工具条 ---------- */
+        .char-toolbar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 18px 24px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            position: sticky;
+            top: 76px;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+        .char-search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        .char-search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .char-search-input {
+            width: 100%;
+            padding: 9px 14px 9px 38px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            background: var(--bg-sidebar);
+            outline: none;
+            transition: var(--transition);
+            color: var(--text-primary);
+        }
+        .char-search-input:focus {
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+        }
+        .char-filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .char-filter-btn {
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .char-filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .char-filter-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25);
+        }
+
+        /* ---------- 角色图鉴档案卡片 ---------- */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 80px;
+        }
+        .char-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .char-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: #DCCEC1;
+        }
+        .char-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            line-height: 1.3;
+        }
+        /* 各系别小颜色标 */
+        .type-special     { background: #F3E8FF; color: #7E22CE; border: 1px solid #E9D5FF; }
+        .type-impact      { background: #FFE4E6; color: #BE123C; border: 1px solid #FECDD3; }
+        .type-subspace    { background: #FFEDD5; color: #C2410C; border: 1px solid #FED7AA; }
+        .type-spatial     { background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; }
+        .type-temporal    { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+        .type-psychic     { background: #FCE7F3; color: #BE185D; border: 1px solid #FBCFE8; }
+        .type-matter      { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+        .type-electromag  { background: #FEF9C3; color: #A16207; border: 1px solid #FEF08A; }
+        .type-telekinesis { background: #E0E7FF; color: #4338CA; border: 1px solid #C7D2FE; }
+
+        .char-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            padding-right: 65px;
+        }
+        .char-avatar-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #F5EAE0, #EADBCF);
+            border: 1.5px solid #D6C2B0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--accent);
+            font-weight: 900;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .char-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+        }
+        .char-avatar-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        .char-names h4 {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        .char-names .char-ability-title {
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .char-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(232, 221, 210, 0.7);
+        }
+
+        .no-char-found {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2.1rem; }
+            .char-toolbar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 页眉 (由 resources/layout.js 统一从 resources/header.html 载入) ===== -->
+    <div id="site-header"></div>
+
+    <main class="container">
+        <!-- 页面头部 -->
+        <header class="page-header">
+            <div class="breadcrumbs">
+                <a href="index.html"><i class="fas fa-home"></i> 首页</a>
+                <span>/</span>
+                <span>世界观与角色设定</span>
+            </div>
+            <h1>《幻想城》世界观与能力者档案</h1>
+            <p>探索奇幻城市的核心法则、学园战术对决体系与全体登场能力者的宿命档案。</p>
+        </header>
+
+        <!-- ===== 核心世界观 ===== -->
+        <section id="worldLore">
+            <div class="section-header">
+                <span class="section-tag">WORLD SETTING</span>
+                <h2>核心世界观</h2>
+                <p>探索能力法则、城市背后的秩序与暗流</p>
+            </div>
+
+            <div class="lore-grid">
+                <div class="lore-card">
+                    <div class="lore-icon-wrap">
+                        <i class="fas fa-monument"></i>
+                    </div>
+                    <h3>幻想之塔</h3>
+                    <p>
+                        刺破穹顶的奇迹，散发着笼罩全城的能量场。它能够复活所有因伤而死的居民，塔底深处却隐藏着能力胶质的秘密。
+                    </p>
+                </div>
+
+                <div class="lore-card">
+                    <div class="lore-icon-wrap">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>能力评级</h3>
+                    <p>
+                        每位居民在体检时被赋予精确能力值：从0到1划分，0.5 为普通能力者，0.8 为百里挑一，而 0.99 则是仅有九人能够触碰的“行走神明”领域。
+                    </p>
+                </div>
+
+                <div class="lore-card">
+                    <div class="lore-icon-wrap">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>幻想学园与选战</h3>
+                    <p>
+                        五人一组的战术对决体系。为了规范私斗，在裁判与观众注视下进行生死搏杀，败者由幻想之塔复活，以此淬炼能力与解决争端。
+                    </p>
+                </div>
+
+                <div class="lore-card">
+                    <div class="lore-icon-wrap">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h3>能力胶质</h3>
+                    <p>
+                        超越常规能量形态的生命质残留。无法感知自身能力的神秘女孩樱莲，正在揭开这层秘密。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 登场角色 · 档案图鉴 ===== -->
+        <section id="characterSection">
+            <div class="section-header">
+                <span class="section-tag">DRAMATIS PERSONAE</span>
+                <h2>登场角色图鉴</h2>
+                <p>穿行在幻想城的大街小巷，每一位能力者都有着各自的天赋与宿命</p>
+            </div>
+
+            <!-- 筛选与搜索工具条 -->
+            <div class="char-toolbar">
+                <div class="char-search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="charSearchInput" class="char-search-input" placeholder="搜索角色姓名、能力称号或背景描述..." />
+                </div>
+                <div class="char-filter-tabs">
+                    <button class="char-filter-btn active" data-type="all">全部系别</button>
+                    <button class="char-filter-btn" data-type="special">特殊能力</button>
+                    <button class="char-filter-btn" data-type="impact">影响系</button>
+                    <button class="char-filter-btn" data-type="subspace">亚空间系</button>
+                    <button class="char-filter-btn" data-type="spatial">空间系</button>
+                    <button class="char-filter-btn" data-type="temporal">时间系</button>
+                    <button class="char-filter-btn" data-type="psychic">心灵系</button>
+                    <button class="char-filter-btn" data-type="matter">物质系</button>
+                    <button class="char-filter-btn" data-type="electromag">电磁系</button>
+                    <button class="char-filter-btn" data-type="telekinesis">意念系</button>
+                </div>
+            </div>
+
+            <div class="character-grid" id="characterGrid">
+                <!-- ==================== 特殊能力 ==================== -->
+                <div class="char-card" data-type="special">
+                    <span class="char-type-badge type-special">特殊能力</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/橡皮.png" alt="橡皮" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">橡</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>橡皮</h4>
+                            <span class="char-ability-title">混乱中立</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">拥有混乱中立的奇异位格与深不可测的奇点力量，超越常规能量场体系的神秘存在。</p>
+                </div>
+                <div class="char-card" data-type="special">
+                    <span class="char-type-badge type-special">特殊能力</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/未来.png" alt="未来" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">未</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>未来</h4>
+                            <span class="char-ability-title">技能掌控</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">掌控复杂法则运算与技能调度的特殊异能者。</p>
+                </div>
+                <div class="char-card" data-type="special">
+                    <span class="char-type-badge type-special">特殊能力</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/西药.png" alt="西药" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">西</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>西药</h4>
+                            <span class="char-ability-title">肉体治愈</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第五章首次登场，芙楠的多年好友。拥有强大的生物组织肉体恢复异能，曾治愈了蕴含生命质的玩偶小樱。</p>
+                </div>
+                <div class="char-card" data-type="special">
+                    <span class="char-type-badge type-special">特殊能力</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/战神.png" alt="战神" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">战</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>战神</h4>
+                            <span class="char-ability-title">感知未来</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">伟大的全知全能者与导师，曾留下“没有无用的能力，只有不会开发的头脑”之至理名言。</p>
+                </div>
+                <div class="char-card" data-type="special">
+                    <span class="char-type-badge type-special">特殊能力</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/橙叶.png" alt="橙叶" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">橙</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>橙叶</h4>
+                            <span class="char-ability-title">因果误导</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">拥有因果误导的罕见异能，能在因果律层面干涉事态发展轨迹。</p>
+                </div>
+                <div class="char-card" data-type="special">
+                    <span class="char-type-badge type-special">特殊能力</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/小涵.png" alt="小涵" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">涵</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>小涵</h4>
+                            <span class="char-ability-title">集中规律</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">拥有集中规律的特殊能力，善于汇聚并规范能量场的运行。</p>
+                </div>
+
+                <!-- ==================== 影响系 ==================== -->
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/巧可.png" alt="巧可" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">巧</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>巧可</h4>
+                            <span class="char-ability-title">虚无技能(前期)</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第三章首次登场，“美食家联盟”队长。拥有强度达0.95以上的罕见“虚无能力”，能强行使周围对手的能力彻底无效化。</p>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/芙楠.png" alt="芙楠" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">芙</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>芙楠</h4>
+                            <span class="char-ability-title">虚无技能</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第一章首次登场，全城仅九位的0.99级至尊能力者之一。拥有“绝对时空”与“虚无能力”，可局部逆转、加速和暂停时间。</p>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/慧谩.png" alt="慧谩" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">慧</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>慧谩</h4>
+                            <span class="char-ability-title">技能强化</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/凯文.png" alt="凯文" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">凯</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>凯文</h4>
+                            <span class="char-ability-title">念动强化</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/樱莲.png" alt="樱莲" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">樱</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>樱莲</h4>
+                            <span class="char-ability-title">空间控制</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第一章首次登场，身负神秘玩偶“小樱”的女孩。实测为微弱空间系(0.10)，但玩偶中蕴藏着神秘的能力胶质。</p>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/福尔.png" alt="福尔" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">福</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>福尔</h4>
+                            <span class="char-ability-title">空间切割</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/晨曦.png" alt="晨曦" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">晨</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>晨曦</h4>
+                            <span class="char-ability-title">同步链锁</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="impact">
+                    <span class="char-type-badge type-impact">影响系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/铃羽.png" alt="铃羽" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">铃</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>铃羽</h4>
+                            <span class="char-ability-title">细化改变</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 亚空间系 ==================== -->
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/回声.png" alt="回声" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">回</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>回声</h4>
+                            <span class="char-ability-title">能量操控</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/极夜.png" alt="极夜" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">极</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>极夜</h4>
+                            <span class="char-ability-title">引力裂隙</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/安德.png" alt="安德" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">安</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>安德</h4>
+                            <span class="char-ability-title">浮力操纵</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第二章首次登场，幻想学园一年级新生，“飓风”成员。脸上有一道X形红色印记，可在战斗中托起队友悬空作战。</p>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/云依.png" alt="云依" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">云</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>云依</h4>
+                            <span class="char-ability-title">增压炮弹</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第三章首次登场，“美食家联盟”成员。能力为增压炮弹，能释放高强度的重压冲击波。</p>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/瑞比.png" alt="瑞比" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">瑞</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>瑞比</h4>
+                            <span class="char-ability-title">动量转换</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第二章首次登场，幻想学园一年级新生，“飓风”成员。红发活泼少年，擅长利用自制“球动力器”实现动能爆发置换。</p>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/烁影.png" alt="烁影" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">烁</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>烁影</h4>
+                            <span class="char-ability-title">加速移动</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/丹尼.png" alt="丹尼" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">丹</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>丹尼</h4>
+                            <span class="char-ability-title">意念隐身</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第三章首次登场，“美食家联盟”成员。能力为意念隐身，擅长在视线盲区与阴影中展开无声近身突袭。</p>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/瑞奇.png" alt="瑞奇" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">奇</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>瑞奇</h4>
+                            <span class="char-ability-title">空气装甲</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/莫克.png" alt="莫克" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">莫</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>莫克</h4>
+                            <span class="char-ability-title">流体控制</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/清音.png" alt="清音" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">清</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>清音</h4>
+                            <span class="char-ability-title">声波转换</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/赫恩.png" alt="赫恩" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">赫</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>赫恩</h4>
+                            <span class="char-ability-title">鸟瞰洞察</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="subspace">
+                    <span class="char-type-badge type-subspace">亚空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/AChy.png" alt="AChy" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">A</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>AChy</h4>
+                            <span class="char-ability-title">奇点攻击</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 空间系 ==================== -->
+                <div class="char-card" data-type="spatial">
+                    <span class="char-type-badge type-spatial">空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/皮尔.png" alt="皮尔" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">皮</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>皮尔</h4>
+                            <span class="char-ability-title">空间移动</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第二章首次登场，幻想学园一年级新生，“飓风”队长。自幼在研究所长大，在与美食家联盟的选战中觉醒了深层空间感知。</p>
+                </div>
+                <div class="char-card" data-type="spatial">
+                    <span class="char-type-badge type-spatial">空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/冰火.png" alt="冰火" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">冰</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>冰火</h4>
+                            <span class="char-ability-title">空间传送</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="spatial">
+                    <span class="char-type-badge type-spatial">空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/混沌.png" alt="混沌" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">混</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>混沌</h4>
+                            <span class="char-ability-title">流放空间</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="spatial">
+                    <span class="char-type-badge type-spatial">空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/尾兜.png" alt="尾兜" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">尾</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>尾兜</h4>
+                            <span class="char-ability-title">空间创造</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="spatial">
+                    <span class="char-type-badge type-spatial">空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/佐特.png" alt="佐特" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">佐</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>佐特</h4>
+                            <span class="char-ability-title">空间线路</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="spatial">
+                    <span class="char-type-badge type-spatial">空间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/芷柒.png" alt="芷柒" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">芷</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>芷柒</h4>
+                            <span class="char-ability-title">跃影破空</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 时间系 ==================== -->
+                <div class="char-card" data-type="temporal">
+                    <span class="char-type-badge type-temporal">时间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/米花.png" alt="米花" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">米</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>米花</h4>
+                            <span class="char-ability-title">绝对静止</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="temporal">
+                    <span class="char-type-badge type-temporal">时间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/巧可.png" alt="巧可" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">巧</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>巧可</h4>
+                            <span class="char-ability-title">绝对时间</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="temporal">
+                    <span class="char-type-badge type-temporal">时间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/芙楠.png" alt="芙楠" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">芙</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>芙楠</h4>
+                            <span class="char-ability-title">绝对时间(前期)</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第一章首次登场，能局部逆转、加速和暂停时间的顶尖时空能力者。</p>
+                </div>
+                <div class="char-card" data-type="temporal">
+                    <span class="char-type-badge type-temporal">时间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/安然.png" alt="安然" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">安</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>安然</h4>
+                            <span class="char-ability-title">时间束缚</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="temporal">
+                    <span class="char-type-badge type-temporal">时间系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/挽歌.png" alt="挽歌" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">挽</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>挽歌</h4>
+                            <span class="char-ability-title">时光收敛</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 心灵系 ==================== -->
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/冰泉.png" alt="冰泉" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">冰</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>冰泉</h4>
+                            <span class="char-ability-title">念话潜入</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第二章首次登场，幻想学园一年级新生，“飓风”成员。蓝发冷峻少女，可在队友脑海中单向同步战术指令并干扰敌方心智。</p>
+                </div>
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/星空.png" alt="星空" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">星</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>星空</h4>
+                            <span class="char-ability-title">意志操控</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/团子.png" alt="团子" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">团</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>团子</h4>
+                            <span class="char-ability-title">绝对调停</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/柠洢.png" alt="柠洢" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">柠</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>柠洢</h4>
+                            <span class="char-ability-title">意念扭曲</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/祈画.png" alt="祈画" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">祈</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>祈画</h4>
+                            <span class="char-ability-title">虚幻现实</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/冰雪.png" alt="冰雪" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">雪</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>冰雪</h4>
+                            <span class="char-ability-title">能力幻想</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="psychic">
+                    <span class="char-type-badge type-psychic">心灵系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/芊眠.png" alt="芊眠" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">芊</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>芊眠</h4>
+                            <span class="char-ability-title">意识感染</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 物质系 ==================== -->
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/墨寒.png" alt="墨寒" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">墨</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>墨寒</h4>
+                            <span class="char-ability-title">火焰涌现</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第三章首次登场，“美食家联盟”成员。能力为火焰涌现，能在周身瞬间爆发灼热火海封锁敌方。</p>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/小桃.png" alt="小桃" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">桃</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>小桃</h4>
+                            <span class="char-ability-title">植物控制</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第三章首次登场，“美食家联盟”成员。能力为植物控制，能撒播种子快速催生出坚韧的藤蔓牢笼。</p>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/卡琳.png" alt="卡琳" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">卡</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>卡琳</h4>
+                            <span class="char-ability-title">碳构转换</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/寒冰.png" alt="寒冰" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">寒</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>寒冰</h4>
+                            <span class="char-ability-title">极寒冰刃</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/云落.png" alt="云落" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">云</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>云落</h4>
+                            <span class="char-ability-title">幻想造物</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/幻灭.png" alt="幻灭" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">幻</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>幻灭</h4>
+                            <span class="char-ability-title">毒气制造</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/风铃.png" alt="风铃" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">风</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>风铃</h4>
+                            <span class="char-ability-title">叶之遐想</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="matter">
+                    <span class="char-type-badge type-matter">物质系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/莉莉.png" alt="莉莉" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">莉</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>莉莉</h4>
+                            <span class="char-ability-title">空气重组</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 电磁系 ==================== -->
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/塔塔.png" alt="塔塔" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">塔</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>塔塔</h4>
+                            <span class="char-ability-title">电磁操控</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/电光.png" alt="电光" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">电</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>电光</h4>
+                            <span class="char-ability-title">电光火石</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/小安.png" alt="小安" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">安</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>小安</h4>
+                            <span class="char-ability-title">等离雷电</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/月怡.png" alt="月怡" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">月</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>月怡</h4>
+                            <span class="char-ability-title">电磁集中</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/路克.png" alt="路克" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">路</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>路克</h4>
+                            <span class="char-ability-title">电性引导</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/路米.png" alt="路米" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">米</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>路米</h4>
+                            <span class="char-ability-title">磁性引导</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="electromag">
+                    <span class="char-type-badge type-electromag">电磁系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/雷克.png" alt="雷克" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">雷</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>雷克</h4>
+                            <span class="char-ability-title">电磁系</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== 意念系 ==================== -->
+                <div class="char-card" data-type="telekinesis">
+                    <span class="char-type-badge type-telekinesis">意念系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/涵影.png" alt="涵影" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">涵</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>涵影</h4>
+                            <span class="char-ability-title">闪烁光剑</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第一章首次登场，幻想学园三年级学生。性格正直坚毅，在银行见义勇为阻击劫匪，能力为将光线凝结为高温实体光刃。</p>
+                </div>
+                <div class="char-card" data-type="telekinesis">
+                    <span class="char-type-badge type-telekinesis">意念系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/华安.png" alt="华安" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">华</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>华安</h4>
+                            <span class="char-ability-title">念力操控</span>
+                        </div>
+                    </div>
+                    <p class="char-desc">于第二章首次登场，幻想学园一年级新生，“飓风”成员。脸上有黑红交织印记，能扭曲光线进行短暂隐身与隔空刺杀。</p>
+                </div>
+                <div class="char-card" data-type="telekinesis">
+                    <span class="char-type-badge type-telekinesis">意念系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/烟雾.png" alt="烟雾" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">烟</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>烟雾</h4>
+                            <span class="char-ability-title">念想爆破</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="char-card" data-type="telekinesis">
+                    <span class="char-type-badge type-telekinesis">意念系</span>
+                    <div class="char-header">
+                        <div class="char-avatar-badge">
+                            <img src="data/img/布恩.png" alt="布恩" class="char-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <span class="char-avatar-fallback">布</span>
+                        </div>
+                        <div class="char-names">
+                            <h4>布恩</h4>
+                            <span class="char-ability-title">具象感知</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== 页脚 (由 resources/layout.js 统一从 resources/footer.html 载入) ===== -->
+    <div id="site-footer"></div>
+
+    <script>
+        // 角色搜索与系别筛选交互
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('charSearchInput');
+            const filterBtns = document.querySelectorAll('.char-filter-btn');
+            const charCards = document.querySelectorAll('.character-grid .char-card');
+
+            let currentType = 'all';
+            let currentKeyword = '';
+
+            function updateCards() {
+                const keyword = currentKeyword.trim().toLowerCase();
+                let visibleCount = 0;
+
+                charCards.forEach(card => {
+                    const cardType = card.getAttribute('data-type');
+                    const matchType = currentType === 'all' || cardType === currentType;
+
+                    let matchSearch = true;
+                    if (keyword) {
+                        const text = card.textContent.toLowerCase();
+                        matchSearch = text.includes(keyword);
+                    }
+
+                    if (matchType && matchSearch) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                let noFoundEl = document.getElementById('noCharFound');
+                if (visibleCount === 0) {
+                    if (!noFoundEl) {
+                        noFoundEl = document.createElement('div');
+                        noFoundEl.id = 'noCharFound';
+                        noFoundEl.className = 'no-char-found';
+                        noFoundEl.innerHTML = '<i class="far fa-user-circle" style="font-size:2.5rem;margin-bottom:10px;display:block;opacity:0.4;"></i>未找到匹配的角色档案';
+                        document.getElementById('characterGrid').appendChild(noFoundEl);
+                    }
+                } else if (noFoundEl) {
+                    noFoundEl.remove();
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    currentKeyword = e.target.value;
+                    updateCards();
+                });
+            }
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentType = btn.getAttribute('data-type');
+                    updateCards();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
