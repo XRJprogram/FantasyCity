@@ -213,6 +213,43 @@
         .sidebar-header h2 i {
             color: var(--accent);
         }
+        .sidebar-header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .refresh-badge-btn {
+            background: rgba(192, 57, 43, 0.08);
+            color: var(--accent);
+            border: 1px solid rgba(192, 57, 43, 0.22);
+            padding: 3px 9px;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            outline: none;
+        }
+        .refresh-badge-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(192, 57, 43, 0.25);
+            transform: translateY(-1px);
+        }
+        .refresh-badge-btn:active {
+            transform: translateY(0);
+        }
+        .refresh-badge-btn.loading i {
+            animation: spin 0.75s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
         .chapter-count-badge {
             font-size: 0.75rem;
             font-family: var(--font-sans);
@@ -731,7 +768,12 @@
             <aside class="chapter-sidebar" id="chapterSidebar">
                 <div class="sidebar-header">
                     <h2><i class="fas fa-list-ul"></i> 目录列表</h2>
-                    <span class="chapter-count-badge" id="totalChapterBadge">共 -- 章</span>
+                    <div class="sidebar-header-right">
+                        <button class="refresh-badge-btn" id="refreshChaptersBtn" title="清除浏览器缓存并同步最新章节">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
+                        <span class="chapter-count-badge" id="totalChapterBadge">共 -- 章</span>
+                    </div>
                 </div>
                 <div class="sidebar-search">
                     <input type="text" id="chapterSearchInput" placeholder="搜索章节标题..." />
@@ -876,15 +918,24 @@
         };
 
         // ============================================================
-        //  2. 页面加载与数据获取
+        //  2. 页面加载与数据获取 (支持自动防缓存与手动强制刷新)
         // ============================================================
-        async function loadChapters() {
+        async function loadChapters(isForce = false) {
+            const refreshBtn = document.getElementById('refreshChaptersBtn');
+            if (refreshBtn) refreshBtn.classList.add('loading');
+
             try {
-                // 并行拉取章节数据与云端统计
+                // 并行拉取章节数据（时间戳防缓存）与云端统计
                 await Promise.allSettled([
                     (async () => {
                         if (window.location.protocol !== 'file:') {
-                            const res = await fetch('data/chapters.json');
+                            const res = await fetch(`data/chapters.json?_t=${Date.now()}`, {
+                                cache: isForce ? 'reload' : 'no-cache',
+                                headers: {
+                                    'Cache-Control': 'no-cache',
+                                    'Pragma': 'no-cache'
+                                }
+                            });
                             if (res.ok) {
                                 const data = await res.json();
                                 chapters = Array.isArray(data) ? data : (data.chapters || []);
@@ -905,20 +956,33 @@
             if (!chapters || chapters.length === 0) {
                 chapterListEl.innerHTML = `<li class="empty-state" style="padding:20px;">暂无章节数据</li>`;
                 readingAreaEl.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无章节内容</p></div>`;
+                if (refreshBtn) refreshBtn.classList.remove('loading');
                 return;
             }
 
             totalChapterBadge.textContent = `共 ${chapters.length} 章`;
             renderChapterList();
 
-            // 读取 URL 参数 ?chapter=X
-            const urlParams = new URLSearchParams(window.location.search);
-            const queryIndex = parseInt(urlParams.get('chapter'));
-            let startIndex = 0;
-            if (!isNaN(queryIndex) && queryIndex >= 0 && queryIndex < chapters.length) {
-                startIndex = queryIndex;
+            // 若不是强制刷新，从 URL 读取参数；若是强制刷新，保持当前阅读章
+            if (!isForce) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryIndex = parseInt(urlParams.get('chapter'));
+                let startIndex = 0;
+                if (!isNaN(queryIndex) && queryIndex >= 0 && queryIndex < chapters.length) {
+                    startIndex = queryIndex;
+                }
+                renderChapter(startIndex);
+            } else {
+                if (currentIndex >= 0 && currentIndex < chapters.length) {
+                    renderChapter(currentIndex);
+                }
             }
-            renderChapter(startIndex);
+
+            if (refreshBtn) {
+                setTimeout(() => {
+                    refreshBtn.classList.remove('loading');
+                }, 400);
+            }
         }
 
         // ============================================================
@@ -973,6 +1037,14 @@
         chapterSearchInput.addEventListener('input', (e) => {
             renderChapterList(e.target.value);
         });
+
+        // 强制刷新按钮点击事件
+        const refreshChaptersBtn = document.getElementById('refreshChaptersBtn');
+        if (refreshChaptersBtn) {
+            refreshChaptersBtn.addEventListener('click', () => {
+                loadChapters(true);
+            });
+        }
 
         // ============================================================
         //  4. 渲染章节正文与统计信息
