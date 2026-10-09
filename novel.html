@@ -822,10 +822,10 @@
             REST_TOKEN: 'gQAAAAAAA0dzAAIgcDFmYTZmYjNhNjUyNTI0NDBkYTFjNDEzNjY5M2Y4ZjVmNg',
             cache: {},
             baseTable: [
-                3840, 3120, 2690, 2410, 2180, 
-                1970, 1850, 1720, 1610, 1490, 
-                1380, 1260, 1150, 1080, 960, 
-                890, 830
+                206, 128, 95, 78, 66, 
+                58, 52, 46, 42, 38, 
+                35, 31, 28, 25, 22, 
+                19, 16
             ],
 
             getKey(index, title) {
@@ -833,7 +833,7 @@
             },
 
             getBaseViews(index) {
-                return this.baseTable[index] !== undefined ? this.baseTable[index] : Math.max(500, 800 - index * 20);
+                return this.baseTable[index] !== undefined ? this.baseTable[index] : Math.max(10, 30 - index);
             },
 
             // 批量从 Redis 云端 MGET 拉取所有章节当前最新观看数
