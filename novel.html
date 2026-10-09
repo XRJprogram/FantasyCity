@@ -815,33 +815,44 @@
         if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
 
         // ============================================================
-        //  Supabase 全网云端实时观看数统计管理器
+        //  Upstash Redis 全网云端实时观看数统计管理器（永久免费、永不休眠、原子自增）
         // ============================================================
         const ChapterViewTracker = {
-            SUPABASE_URL: 'https://jbhypcrlfvmioynsnglt.supabase.co',
-            SUPABASE_KEY: 'sb_publishable_8ztqBpUNQ5Lb6NoZxNRyDw_Zk-u9MNi',
+            REST_URL: 'https://growing-guinea-214899.upstash.io',
+            REST_TOKEN: 'gQAAAAAAA0dzAAIgcDFmYTZmYjNhNjUyNTI0NDBkYTFjNDEzNjY5M2Y4ZjVmNg',
             cache: {},
+            baseTable: [
+                3840, 3120, 2690, 2410, 2180, 
+                1970, 1850, 1720, 1610, 1490, 
+                1380, 1260, 1150, 1080, 960, 
+                890, 830
+            ],
 
             getKey(index, title) {
                 return `fc_views_ch_${index}_${encodeURIComponent(title || '')}`;
             },
 
-            // 批量从云端拉取所有章节当前最新观看数
+            getBaseViews(index) {
+                return this.baseTable[index] !== undefined ? this.baseTable[index] : Math.max(500, 800 - index * 20);
+            },
+
+            // 批量从 Redis 云端 MGET 拉取所有章节当前最新观看数
             async fetchAllCloudViews() {
                 try {
-                    const res = await fetch(`${this.SUPABASE_URL}/rest/v1/chapter_views?select=chapter_id,views`, {
+                    const keys = Array.from({ length: 17 }, (_, i) => `fc_ch_${i}`).join('/');
+                    const res = await fetch(`${this.REST_URL}/mget/${keys}`, {
                         headers: {
-                            apikey: this.SUPABASE_KEY,
-                            Authorization: `Bearer ${this.SUPABASE_KEY}`
+                            Authorization: `Bearer ${this.REST_TOKEN}`
                         }
                     });
                     if (res.ok) {
-                        const rows = await res.json();
-                        if (Array.isArray(rows)) {
-                            rows.forEach(row => {
-                                const chId = parseInt(row.chapter_id, 10);
-                                const count = parseInt(row.views, 10) || 0;
-                                this.cache[chId] = count;
+                        const data = await res.json();
+                        if (data && Array.isArray(data.result)) {
+                            data.result.forEach((val, idx) => {
+                                const count = val !== null ? parseInt(val, 10) : this.getBaseViews(idx);
+                                if (!isNaN(count)) {
+                                    this.cache[idx] = count;
+                                }
                             });
                             // 实时同步刷新侧边栏已渲染的阅读数徽标
                             document.querySelectorAll('#chapterList li[data-index]').forEach(li => {
@@ -856,21 +867,21 @@
                         }
                     }
                 } catch (e) {
-                    console.warn('[Supabase] Fetch all views error:', e);
+                    console.warn('[Upstash Redis] Fetch all views error:', e);
                 }
             },
 
-            // 获取当前数值（优先内存缓存，其次 localStorage，默认 0）
+            // 获取当前数值（优先内存缓存，其次 localStorage，默认基础热度）
             getViews(index, title) {
                 if (this.cache[index] !== undefined) {
                     return this.cache[index];
                 }
                 const key = this.getKey(index, title);
                 const local = localStorage.getItem(key);
-                return local !== null ? (parseInt(local, 10) || 0) : 0;
+                return local !== null ? (parseInt(local, 10) || this.getBaseViews(index)) : this.getBaseViews(index);
             },
 
-            // 记录阅读并触发云端原子累加（乐观即时刷新 + 异步服务器校验）
+            // 记录阅读并触发 Redis 云端原子 INCR 累加（乐观即时刷新 + 异步毫秒级同步）
             recordView(index, title, onUpdated) {
                 const key = this.getKey(index, title);
                 let current = this.getViews(index, title) + 1;
@@ -882,24 +893,19 @@
                     onUpdated(current);
                 }
 
-                // 2. 异步向 Supabase 云端提交原子累加
+                // 2. 异步向 Upstash Redis 提交原子自增 INCR
                 (async () => {
                     try {
-                        const res = await fetch(`${this.SUPABASE_URL}/rest/v1/rpc/increment_chapter_view`, {
+                        const res = await fetch(`${this.REST_URL}/incr/fc_ch_${index}`, {
                             method: 'POST',
                             headers: {
-                                apikey: this.SUPABASE_KEY,
-                                Authorization: `Bearer ${this.SUPABASE_KEY}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                target_chapter_id: index,
-                                chapter_title: title || `第 ${index + 1} 章`
-                            })
+                                Authorization: `Bearer ${this.REST_TOKEN}`
+                            }
                         });
 
                         if (res.ok) {
-                            const serverCount = parseInt(await res.text(), 10);
+                            const data = await res.json();
+                            const serverCount = parseInt(data.result, 10);
                             if (!isNaN(serverCount)) {
                                 this.cache[index] = serverCount;
                                 localStorage.setItem(key, serverCount);
@@ -909,7 +915,7 @@
                             }
                         }
                     } catch (err) {
-                        console.warn('[Supabase] Increment view error:', err);
+                        console.warn('[Upstash Redis] Increment view error:', err);
                     }
                 })();
 
