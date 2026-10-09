@@ -815,25 +815,15 @@
         if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
 
         // ============================================================
-        //  Upstash Redis 全网云端实时观看数统计管理器（永久免费、永不休眠、原子自增）
+        //  Upstash Redis 全网云端实时观看数统计管理器（100% 真实云端计数）
         // ============================================================
         const ChapterViewTracker = {
             REST_URL: 'https://growing-guinea-214899.upstash.io',
             REST_TOKEN: 'gQAAAAAAA0dzAAIgcDFmYTZmYjNhNjUyNTI0NDBkYTFjNDEzNjY5M2Y4ZjVmNg',
             cache: {},
-            baseTable: [
-                206, 128, 95, 78, 66, 
-                58, 52, 46, 42, 38, 
-                35, 31, 28, 25, 22, 
-                19, 16
-            ],
 
             getKey(index, title) {
                 return `fc_views_ch_${index}_${encodeURIComponent(title || '')}`;
-            },
-
-            getBaseViews(index) {
-                return this.baseTable[index] !== undefined ? this.baseTable[index] : Math.max(10, 30 - index);
             },
 
             // 批量从 Redis 云端 MGET 拉取所有章节当前最新观看数
@@ -849,10 +839,8 @@
                         const data = await res.json();
                         if (data && Array.isArray(data.result)) {
                             data.result.forEach((val, idx) => {
-                                const count = val !== null ? parseInt(val, 10) : this.getBaseViews(idx);
-                                if (!isNaN(count)) {
-                                    this.cache[idx] = count;
-                                }
+                                const count = val !== null ? (parseInt(val, 10) || 0) : 0;
+                                this.cache[idx] = count;
                             });
                             // 实时同步刷新侧边栏已渲染的阅读数徽标
                             document.querySelectorAll('#chapterList li[data-index]').forEach(li => {
@@ -871,14 +859,14 @@
                 }
             },
 
-            // 获取当前数值（优先内存缓存，其次 localStorage，默认基础热度）
+            // 获取当前数值（优先内存缓存，其次 localStorage，默认 0）
             getViews(index, title) {
                 if (this.cache[index] !== undefined) {
                     return this.cache[index];
                 }
                 const key = this.getKey(index, title);
                 const local = localStorage.getItem(key);
-                return local !== null ? (parseInt(local, 10) || this.getBaseViews(index)) : this.getBaseViews(index);
+                return local !== null ? (parseInt(local, 10) || 0) : 0;
             },
 
             // 记录阅读并触发 Redis 云端原子 INCR 累加（乐观即时刷新 + 异步毫秒级同步）
