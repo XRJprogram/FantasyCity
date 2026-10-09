@@ -826,10 +826,11 @@
                 return `fc_views_ch_${index}_${encodeURIComponent(title || '')}`;
             },
 
-            // 批量从 Redis 云端 MGET 拉取所有章节当前最新观看数
+            // 批量从 Redis 云端 MGET 拉取所有章节当前最新观看数（动态自适应所有新增章节）
             async fetchAllCloudViews() {
                 try {
-                    const keys = Array.from({ length: 17 }, (_, i) => `fc_ch_${i}`).join('/');
+                    const total = (chapters && chapters.length) ? Math.max(chapters.length, 30) : 30;
+                    const keys = Array.from({ length: total }, (_, i) => `fc_ch_${i}`).join('/');
                     const res = await fetch(`${this.REST_URL}/mget/${keys}`, {
                         headers: {
                             Authorization: `Bearer ${this.REST_TOKEN}`
