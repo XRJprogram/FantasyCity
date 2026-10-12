@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080f1c"><title>幻想城 / FANTASIA · 垂直都市</title>
+<style>
+:root{--ink:#dfebf5;--muted:#8198ac;--cyan:#67e4ee;--pink:#eb6cbb;--amber:#f1b273;--line:#8ec7df29;--panel:#0c1625ed}
+*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#080f1c;color:var(--ink);font:12px/1.65 "Segoe UI","Microsoft YaHei",sans-serif}button,input,select{font:inherit;color:inherit}button{cursor:pointer;border:1px solid var(--line);background:#142336;padding:8px 12px;transition:background .18s}button:hover{background:#23394d}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}button:disabled{opacity:.4;cursor:wait}h1,h2,h3,p{margin:0}small{font-size:9px}.mono{font-family:Consolas,monospace;letter-spacing:.08em}.eyebrow{font-size:9px;color:var(--muted);letter-spacing:.21em}.panel{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(18px);box-shadow:0 15px 45px #0003}.panel:before{content:"";position:absolute;left:-1px;top:-1px;width:23px;height:2px;background:var(--cyan)}
+#viewport,#labels{position:fixed;inset:0}#viewport{touch-action:none}#viewport canvas{display:block;width:100%;height:100%}#labels{pointer-events:none;z-index:1}.topbar{position:fixed;top:20px;left:22px;right:22px;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:4}.brand{display:flex;align-items:center;gap:15px}.brandmark{font-size:32px;color:var(--cyan);border-right:1px solid var(--line);padding-right:16px}.brand h1{font-size:22px;letter-spacing:.24em;font-weight:550}.brand small{display:block;color:var(--muted);font-size:8px;letter-spacing:.26em}.topnav{display:flex;gap:5px}.topnav button{border:0;background:none;color:var(--muted);padding:9px 18px}.topnav button.active{color:var(--cyan);background:#67e4ee0c}.engine{display:flex;gap:8px;align-items:center;font-size:9px;color:var(--cyan)}.dot{width:5px;height:5px;background:var(--cyan);box-shadow:0 0 10px var(--cyan);border-radius:50%}
+.left{position:fixed;top:104px;left:22px;bottom:112px;width:245px;z-index:3;padding:20px 17px;overflow:auto;scrollbar-width:thin;scrollbar-color:#395164 transparent}.left h2{font-size:25px;font-weight:450;letter-spacing:.08em;line-height:1.4;margin:9px 0}.intro{font-size:10px;color:var(--muted);line-height:1.9}.stats{display:grid;grid-template-columns:1fr 1fr;gap:15px 5px;padding:16px 0;border-block:1px solid var(--line);margin:18px 0}.stats strong{font:23px/1.3 Consolas,monospace;display:block;font-weight:400;color:#e0f3ff}.stats span{font-size:9px;color:var(--muted)}.stats strong span{font-size:11px}.sectionhead{display:flex;justify-content:space-between;margin:17px 0 9px;align-items:center}.sectionhead h3{font-size:11px;font-weight:500}.sectionhead small{color:var(--muted);font:8px Consolas,monospace}.search{border:1px solid var(--line);background:#070f1b;width:100%;padding:8px 10px;outline:none;font-size:10px;margin-bottom:8px}.place{display:flex;align-items:center;gap:10px;width:100%;padding:9px 5px;background:none;border:0;text-align:left}.place.selected{background:#5bdef010;border-left:2px solid var(--cyan)}.place .num{font:9px Consolas,monospace;color:#56748a;width:17px}.place b{display:block;font-size:11px;font-weight:450}.place small{display:block;color:var(--muted);font-size:8px}.place .arrow{margin-left:auto;color:#57748b}.layer{display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:10px;color:#a4b8c9}.switch{appearance:none;width:27px;height:14px;border:1px solid #415468;background:#263547;cursor:pointer;position:relative;margin:0}.switch:after{content:"";width:8px;height:8px;background:#91a2b0;position:absolute;left:2px;top:2px;transition:transform .2s}.switch:checked{background:#255061;border-color:#45858e}.switch:checked:after{transform:translateX(13px);background:var(--cyan)}
+.right{position:fixed;top:104px;right:22px;width:210px;z-index:3}.environment{padding:15px}.environment summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between}.environment summary:after{content:"−";color:var(--cyan)}.environment:not([open]) summary:after{content:"+"}.rangehead{display:flex;justify-content:space-between;color:var(--muted);font-size:9px;margin-top:14px}input[type=range]{accent-color:var(--cyan);width:100%;height:12px;margin:10px 0}.presets{display:flex;gap:4px}.presets button{flex:1;font-size:9px;padding:5px}.environment select{width:100%;border:1px solid var(--line);background:#101e2c;padding:6px;margin-top:8px;font-size:10px}.legend{display:grid;grid-template-columns:1fr 1fr;gap:9px;border-top:1px solid var(--line);padding-top:13px;margin-top:14px;color:var(--muted);font-size:9px}.legend i{display:inline-block;width:6px;height:6px;margin-right:5px}.compass{margin:16px 0 0 auto;width:40px;text-align:center;color:#94b6c9;font:9px Consolas,monospace}.compass b{display:block;line-height:1.2;font-size:30px;font-weight:400}.maptools{position:fixed;right:22px;top:430px;display:flex;flex-direction:column;gap:5px;z-index:3}.maptools button{width:34px;height:34px;padding:0;background:var(--panel);font-size:18px}.maptools .active{color:var(--cyan);border-color:#67e4ee88}
+.bottom{position:fixed;bottom:22px;left:287px;right:252px;min-height:72px;z-index:3;display:flex;align-items:center;padding:12px 18px;gap:18px}.view-title{white-space:nowrap;border-right:1px solid var(--line);padding-right:17px}.view-title b{display:block;font-weight:450;font-size:11px}.view-title small{color:var(--muted);font:8px Consolas,monospace}.viewnav{display:flex;flex:1;gap:7px}.viewnav button{flex:1;border:0;background:none;font-size:10px;padding:8px}.viewnav button.active{background:#67e4ee0b;box-shadow:inset 0 -2px var(--cyan);color:var(--cyan)}.viewnav small{display:block;font:8px Consolas,monospace;color:var(--muted);margin-top:4px}.bottom-status{position:fixed;left:22px;bottom:22px;width:245px;padding:12px;font-size:9px;color:var(--muted)}.bottom-status b{display:block;color:var(--cyan);font-weight:450}.minimap{position:fixed;bottom:22px;right:22px;width:210px;padding:10px;z-index:3}.minimap header{display:flex;justify-content:space-between;font-size:9px;margin-bottom:6px}.minimap canvas{display:block;width:188px;height:148px;cursor:crosshair;background:#0b1825}.minimap footer{display:flex;justify-content:space-between;padding-top:6px;font-size:8px;color:var(--muted)}
+.maplabel{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;white-space:nowrap;font-size:10px;padding:5px 9px;display:none;background:#102337ed;border:1px solid #679bae66;color:#b3dbe7;box-shadow:0 0 18px #00152655}.maplabel:after{content:"";position:absolute;left:50%;bottom:-20px;height:19px;width:1px;background:#71cfdd66}.maplabel.hero{color:#a4f4f8;border-color:#67e4ee88;box-shadow:0 0 16px #48dbe61a}.maplabel em{font-style:normal;color:var(--cyan);font-size:8px;margin-right:6px}
+#detail{display:none;position:fixed;left:287px;bottom:112px;width:320px;padding:18px;z-index:5}.detail-top{display:flex;justify-content:space-between;align-items:center}.detail-top button{background:none;border:0;padding:0;color:var(--muted);font-size:20px}#detail h2{font-size:21px;font-weight:450;margin:6px 0 11px}#detail p{font-size:11px;color:#a4b5c6;line-height:1.9}.source{border-top:1px solid var(--line);padding-top:10px;margin-top:13px;font-size:9px;color:#6e879d}.detail-actions{display:flex;gap:7px;margin-top:14px}.detail-actions button{font-size:10px;padding:7px 10px}.primary{border-color:#5bbdcc80;background:#244d5a;color:#c3fbff}
+#loader{position:fixed;inset:0;z-index:20;background:#090f1c;display:flex;align-items:center;justify-content:center;transition:opacity .6s}.loadcard{max-width:480px;padding:30px;text-align:center}.loadsymbol{font-size:66px;line-height:1.6;color:var(--cyan);text-shadow:0 0 45px #67e4ee55}.loadcard h2{font-size:27px;font-weight:400;letter-spacing:.2em;margin-top:9px}.loadcard p{color:var(--muted);font-size:11px}.track{width:220px;height:2px;background:#233246;margin:26px auto}.track i{display:block;width:5%;height:100%;background:var(--cyan);box-shadow:0 0 9px #67e4ee77;transition:width .4s}#fallback{position:fixed;inset:0;z-index:19;display:none;background:#080f1c}#fallback canvas{width:100%;height:100%}.fallbackcard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(480px,90vw);padding:27px}.fallbackcard h2{font-size:22px;font-weight:450;margin:9px 0}.fallbackcard p{font-size:12px;color:var(--muted);margin:12px 0}.fallbackcard button{margin:6px 5px 0 0}.help{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,92vw);padding:28px;z-index:12}.help h2{font-weight:450;font-size:23px}.help p{margin:16px 0;color:#a2b4c5;font-size:12px}.help kbd{border:1px solid #426079;padding:2px 5px;font-size:10px}.help .close{float:right;padding:0 6px;border:0;background:none;font-size:20px}#toast{display:none;position:fixed;top:99px;left:50%;transform:translateX(-50%);max-width:80vw;padding:10px 18px;background:#162d40ed;border:1px solid #67e4ee55;color:#c0e6ee;z-index:22;font-size:11px}.mobile-toggle{display:none}.empty{color:var(--muted);font-size:10px;padding:14px 0}
+@media(min-width:1600px){.left,.bottom-status{width:267px}.bottom,#detail{left:309px}}
+@media(max-width:1100px){.topnav{display:none}.left,.bottom-status{width:220px}.bottom,#detail{left:260px}.right,.minimap{width:181px}.minimap canvas{width:159px;height:125px}.bottom{right:223px}.view-title{display:none}}
+@media(max-width:760px){.topbar{left:12px;right:12px;top:12px;height:59px;padding:0 13px}.brand h1{font-size:17px}.brand small{font-size:7px}.brandmark{font-size:25px;padding-right:10px}.engine{font-size:8px}.version{display:none}.left{display:none;left:12px;top:113px;bottom:100px;width:246px;z-index:8}.left.open{display:block}.mobile-toggle{display:block;position:fixed;left:12px;top:83px;background:var(--panel);z-index:8;font-size:10px}.right{right:12px;top:83px;width:170px}.environment{padding:12px}.environment summary{font-size:10px}.compass{display:none}.bottom{left:12px;right:12px;bottom:12px;padding:6px;min-height:64px}.viewnav button{font-size:10px;padding:8px 3px}.bottom-status{display:none}.minimap{right:12px;bottom:89px;width:145px;padding:8px}.minimap canvas{width:127px;height:100px}.minimap footer{font-size:7px}.maptools{right:12px;top:auto;bottom:257px}.maptools button{width:30px;height:30px;font-size:16px}#detail{left:12px;bottom:89px;width:calc(100vw - 178px);min-width:183px;padding:13px}#detail h2{font-size:17px}#detail p{font-size:10px}.detail-actions{flex-wrap:wrap}.maplabel{font-size:9px;padding:4px 7px}#toast{top:78px;max-width:93vw;width:max-content}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Compact exploration layout: no top bar, bottom navigation, statistics or detail cards. */
+.left{top:22px;bottom:auto;width:220px;max-height:calc(100vh - 44px);padding:17px 14px}.compact-brand{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px}.compact-brand h1{font-size:21px;font-weight:500;letter-spacing:.13em}.left .intro{font-size:10px;margin-bottom:13px}.place{padding:8px 3px}.place small{font:8px/1.8 Consolas,monospace;color:#7593a9}.layers{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}.layers summary{cursor:pointer;font-size:10px;color:#9eb9ca}.gesture-hint{font-size:8px;color:#627e92;border-top:1px solid var(--line);padding-top:11px;margin-top:11px}.right{top:22px;width:193px}.maptools{top:82px}.right:has(.environment[open])~.maptools{top:367px}#toast{top:22px}.environment{max-height:calc(100vh - 48px);overflow:auto}.help p{font-size:11px}
+@media(max-width:760px){.left{top:58px;left:12px;width:220px;max-height:calc(100vh - 72px);bottom:auto}.mobile-toggle{top:12px}.right{top:12px;width:170px;right:12px}.maptools{top:65px;bottom:auto}.right:has(.environment[open])~.maptools{top:355px}#toast{top:15px}.gesture-hint{font-size:8px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.webgpu.js","three/webgpu":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.webgpu.js","three/tsl":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.tsl.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"}}</script>
+</head>
+<body>
+<div id="viewport" aria-label="幻想城三维交互地图"></div>
+<button class="mobile-toggle" id="mobile-menu" aria-expanded="false">☷ 地点</button>
+<aside class="left panel" id="sidebar"><div class="compact-brand"><a href="index.html" style="color:inherit;text-decoration:none;display:flex;align-items:baseline;justify-content:space-between;width:100%" title="返回主站首页"><h1>幻想城</h1><span class="eyebrow">FANTASIA · 首页</span></a></div><p class="intro">点击坐标，前往城市一角。</p><div id="places"></div><details class="layers"><summary>图层</summary><label class="layer">地标标签<input class="switch" id="toggle-labels" type="checkbox" checked></label><label class="layer">空中道路<input class="switch" id="toggle-skyways" type="checkbox" checked></label><label class="layer">能量穹顶<input class="switch" id="toggle-dome" type="checkbox" checked></label><label class="layer">车流与列车<input class="switch" id="toggle-traffic" type="checkbox" checked></label><label class="layer">轨道高亮<input class="switch" id="toggle-metro" type="checkbox"></label></details><p class="gesture-hint">拖拽旋转 · 右键平移 · 滚轮缩放</p></aside>
+<div class="right"><details class="environment panel"><summary>光影设置 <span class="eyebrow">ENV.</span></summary><div class="rangehead"><span>城市时间</span><span id="time-text" class="mono">19:12</span></div><input id="sun-time" type="range" min="0" max="24" step=".05" value="19.2" aria-label="城市时间"><label class="layer" style="margin-top:9px">日夜流转<input id="toggle-cycle" class="switch" type="checkbox"></label><label class="layer">镜头景深<input id="toggle-dof" class="switch" type="checkbox" checked></label><div class="rangehead"><span>大气雾感</span><span id="fog-text">28%</span></div><input id="fog" type="range" min="0" max="100" value="28" aria-label="雾强度"><select id="quality" aria-label="渲染质量"><option value="balanced">均衡 · 4 级阴影 / 1024px</option><option value="high">精细 · 4 级阴影 / 2048px</option><option value="low">轻量 · 4 级阴影 / 512px</option><option value="ultra-low">极简 · 4 级阴影 / 256px</option></select></details></div>
+<div class="maptools" role="toolbar" aria-label="视角工具"><button id="zoom-in" title="放大" aria-label="放大">＋</button><button id="zoom-out" title="缩小" aria-label="缩小">−</button><button id="home" title="全景 [H]" aria-label="全景">⌂</button><button id="orbit" title="环绕 [O]" aria-label="环绕">⟳</button><button id="tour" title="地标巡游" aria-label="地标巡游">▷</button><button id="help-button" title="操作说明" aria-label="操作说明">?</button></div>
+<div id="labels"></div>
+<section id="help" class="help panel"><button id="close-help" class="close" aria-label="关闭说明">×</button><h2>在城市中漫游</h2><p>左键旋转、右键平移、滚轮缩放。触屏单指旋转，双指平移与缩放。</p><p><kbd>W A S D</kbd> 平移　<kbd>H</kbd> 全景　<kbd>O</kbd> 环绕<br><kbd>Esc</kbd> 停止巡游 / 关闭说明</p><p>点击左侧坐标定位。右侧 ▷ 开始巡游，拖拽可随时停止。</p><button id="help-done" class="primary">继续探索</button></section>
+<div id="loader"><div class="loadcard"><div class="loadsymbol">◈</div><div class="eyebrow">FANTASIA / VERTICAL ATLAS 02</div><h2>正在唤醒幻想城</h2><div class="track"><i id="progress"></i></div><p id="load-text">检测 WebGPU 与图形设备…</p></div></div>
+<div id="fallback" role="alert"><div id="fallback-card" class="fallbackcard panel"><div class="eyebrow">WEBGPU / CONNECTION STATUS</div><h2>暂时无法启动三维场景</h2><p id="fallback-reason"></p><p>请使用支持 WebGPU 的浏览器，开启硬件加速，并通过 HTTPS 或 localhost 打开。页面需要联网加载 Three.js。</p><button id="retry" class="primary">重新加载</button><button id="fallback-info">环境信息</button></div></div><div id="toast" role="status"></div>
+<script>
+window.atlasReady=false;
+window.showFallback=function(reason){window.atlasFailed=true;document.getElementById('loader').style.display='none';document.getElementById('fallback').style.display='block';document.getElementById('fallback-reason').textContent=reason};
+document.getElementById('retry').onclick=()=>location.reload();
+document.getElementById('fallback-info').onclick=()=>document.getElementById('fallback-reason').textContent=`安全上下文：${isSecureContext?'是':'否'} · WebGPU 接口：${navigator.gpu?'可用':'不可用'} · 协议：${location.protocol}。建议使用新版 Chrome / Edge 并开启硬件加速。`;
+window.bootWatchdog=setTimeout(()=>{if(!window.atlasReady)window.showFallback('初始化超过 90 秒。请检查 CDN 网络、GPU 驱动或重新检测。')},90000);
+</script>
+<script type="module">
+// BEGIN CITY MODEL — deterministic native-TSL procedural island, independently verifiable.
+function createCity(THREE,TSL){
+  const {uniform,color,float,positionWorld,positionLocal,normalWorld,cameraPosition,sin,fract,step,mix}=TSL;
+  const TAU=Math.PI*2,V=(x=0,y=0,z=0)=>new THREE.Vector3(x,y,z);
+  let seed=0xFA17A52B;
+  const rand=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  const between=(a,b)=>a+(b-a)*rand(),pick=a=>a[Math.floor(rand()*a.length)],clamp=THREE.MathUtils.clamp;
+  const root=new THREE.Group(),surface=new THREE.Group(),airways=new THREE.Group(),metro=new THREE.Group(),traffic=new THREE.Group(),domeGroup=new THREE.Group(),tower=new THREE.Group(),academy=new THREE.Group();
+  root.name='幻想城 / ISLAND CITY / metres';surface.name='Island and surface';airways.name='Multilevel aerial roads';academy.name='幻想学园';tower.name='幻想之塔 / 3200 m';root.add(surface);surface.add(airways,metro,traffic,domeGroup,tower,academy);metro.visible=false;
+  const clock=uniform(0),night=uniform(1),stats={buildings:0,trees:0,majorRoads:0,skyways:0,roadSegments:0,areaKm2:0,mountainKm2:0,mountainPeak:0,seed:'FA17A52B',districts:{},towerHeight:3200,academyBuildings:0,highRises:0,campusFenceSegments:0,campusRoads:0};
+  const buildings=[],roadGraph=[],allRoads=[],batches=new Map(),trainRoutes=[],checkedPlots=[],campusPaths=[],parcelEnvelopes=[];
+  const geos={box:new THREE.BoxGeometry(1,1,1),cylinder:new THREE.CylinderGeometry(1,1,1,8),cone:new THREE.ConeGeometry(1,1,5),ico:new THREE.IcosahedronGeometry(1,0),octa:new THREE.OctahedronGeometry(1,0)};
+  const mat=(c,extra={})=>new THREE.MeshStandardNodeMaterial({color:c,roughness:.72,metalness:.12,flatShading:true,...extra});
+  const glow=(c,k=1.7)=>new THREE.MeshBasicNodeMaterial({colorNode:color(c).mul(k),toneMapped:false});
+  const M={ground:mat('#2e4054'),cliff:mat('#33445b'),road:mat('#3b4e62'),trim:mat('#657e96'),dark:mat('#2b3d52'),alloy:mat('#d2dce9',{metalness:.3,roughness:.5}),academy:mat('#98acc4'),roof:mat('#405770'),glass:mat('#3b6480',{metalness:.25,roughness:.33}),rock:mat('#475169'),rust:mat('#80646b'),leaf:mat('#3c6c71'),black:mat('#152337'),white:mat('#a7b9cc'),cyan:glow('#5acbdd',1.55),pink:glow('#d767a5',1.65),amber:glow('#edb171',1.65),ice:glow('#b3edff',2.4),violet:glow('#9394e8',1.9)};
+  const facade=mat('#ffffff',{roughness:.55});
+  const windows=step(.48,fract(positionWorld.y.div(9))).mul(step(.48,fract(positionWorld.x.add(positionWorld.z).div(15))));
+  const lit=step(.57,fract(sin(positionWorld.x.div(15).floor().mul(3.7).add(positionWorld.z.div(15).floor().mul(4.9)).add(positionWorld.y.div(9).floor())).mul(153.3)));
+  const distant=cameraPosition.sub(positionWorld).length().smoothstep(1800,11000).oneMinus().mul(.7).add(.3);
+  facade.emissiveNode=mix(color('#72bfd1'),color('#efb185'),step(.58,fract(positionWorld.x.mul(.0007)))).mul(windows).mul(lit).mul(distant).mul(normalWorld.y.abs().oneMinus()).mul(night.mul(.34).add(.06));
+  function add(kind,x,y,z,w,h,d,material=M.trim,rotation=0,tint=null,parent=surface,q=null){const key=kind+material.uuid+parent.uuid;if(!batches.has(key))batches.set(key,{kind,material,parent,items:[]});batches.get(key).items.push({x,y,z,w,h,d,rotation,tint,q})}
+  const box=(x,y,z,w,h,d,m=M.trim,r=0,t=null,p=surface)=>add('box',x,y,z,w,h,d,m,r,t,p);
+  function mesh(geometry,material,x=0,y=0,z=0,parent=surface){const o=new THREE.Mesh(geometry,material);o.position.set(x,y,z);o.castShadow=!material.isMeshBasicNodeMaterial;o.receiveShadow=true;parent.add(o);return o}
+  function beam(a,b,w,h,material=M.trim,parent=surface){const delta=b.clone().sub(a),p=a.clone().add(b).multiplyScalar(.5),len=delta.length();if(len<.01)return;const q=new THREE.Quaternion().setFromUnitVectors(V(0,0,1),delta.divideScalar(len));add('box',p.x,p.y,p.z,w,h,len,material,0,null,parent,q)}
+  function ring(x,y,z,r,width,material,parent=surface,segments=64){const o=mesh(new THREE.RingGeometry(r-width/2,r+width/2,segments),material,x,y,z,parent);o.rotation.x=-Math.PI/2;o.castShadow=false;return o}
+  const coast=a=>6100+290*Math.sin(3*a+.7)+210*Math.cos(5*a-.4)+135*Math.sin(9*a);
+  const inside=(x,z,margin=0)=>Math.hypot(x,z)<coast(Math.atan2(z,x))-margin;
+  // Only the academic precinct is a road exclusion. Other plots are selected AFTER the roads.
+  const sites=[
+    {id:'tower',x:0,z:0,r:940},
+    {id:'academy',x:3450,z:-1370,rx:2140,rz:1690},
+    {id:'arena',x:4980,z:-1450,r:520},
+    {id:'clinic',x:4770,z:-450,r:120},
+    {id:'cafe',x:4780,z:180,r:150},
+    {id:'home',x:-2220,z:3480,r:200},
+    {id:'phantom',x:-3390,z:-1950,r:225},
+    {id:'committee',x:-1310,z:-1740,r:265},
+    {id:'prison',x:-800,z:-5440,hw:290,hd:250},
+    {id:'station',x:500,z:4710,hw:640,hd:600},
+    {id:'port',x:3980,z:3520,hw:670,hd:650},
+    {id:'mall',x:-3400,z:2300,r:640},
+    {id:'park',x:-950,z:3250,r:650},
+    {id:'villas',x:-3480,z:-3320,r:730}
+  ];
+  const siteById=Object.fromEntries(sites.map(s=>[s.id,s]));
+  function siteDistance(x,z,s){return s.rx?(Math.hypot((x-s.x)/s.rx,(z-s.z)/s.rz)-1)*Math.min(s.rx,s.rz):s.r?Math.hypot(x-s.x,z-s.z)-s.r:Math.max(Math.abs(x-s.x)-s.hw,Math.abs(z-s.z)-s.hd)}
+  const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+  function terrainHeight(x,z){
+    const north=smooth(2100,3650,-z),east=smooth(-2700,100,x);
+    const ridge=850*Math.exp(-(((x-2500)/2450)**2+((z+4300)/1650)**2))+570*Math.exp(-(((x-4550)/1500)**2+((z+3150)/1900)**2))+480*Math.exp(-(((x+150)/2000)**2+((z+5350)/1300)**2))+430*Math.exp(-(((x-1750)/720)**2+((z+4250)/850)**2))+380*Math.exp(-(((x-3920)/840)**2+((z+4050)/720)**2));
+    const detail=.8+.12*Math.sin(x*.0021+z*.0008)+.08*Math.cos(z*.0037-x*.0013)+.045*Math.sin((x+z)*.006);
+    const mask=smooth(40,1400,siteDistance(x,z,siteById.academy));
+    return 2.25*ridge*north*east*detail*mask;
+  }
+  const occupiedCells=new Map(),plotCell=240;
+  function nearbyPlots(x,z,r){const found=new Set();for(let i=Math.floor((x-r)/plotCell);i<=Math.floor((x+r)/plotCell);i++)for(let j=Math.floor((z-r)/plotCell);j<=Math.floor((z+r)/plotCell);j++)for(const p of occupiedCells.get(i+','+j)||[])found.add(p);return found}
+  function occupy(p){checkedPlots.push(p);for(let i=Math.floor((p.x-p.r)/plotCell);i<=Math.floor((p.x+p.r)/plotCell);i++)for(let j=Math.floor((p.z-p.r)/plotCell);j<=Math.floor((p.z+p.r)/plotCell);j++){const key=i+','+j;if(!occupiedCells.has(key))occupiedCells.set(key,[]);occupiedCells.get(key).push(p)}}
+  function footprint(w,d,style){const r=Math.hypot(Math.max(w*(style==='cantilever'?.96:.66),w/2+9),Math.max(d*.61,d/2+9))+5;return style==='villa'?Math.max(r,68):r}
+  const roofAllowance=style=>style==='station'?165:style==='gallery'?150:style==='mall'?112:style==='twin'?74:style==='terrace'||style==='ziggurat'?58:style==='lantern'?64:48;
+  function canPlace(x,z,r,top,owner=null){
+    if(!inside(x,z,r+15)||terrainHeight(x,z)>3)return false;
+    if(sites.some(s=>s.id!==owner&&siteDistance(x,z,s)<r+16))return false;
+    if(roadClearance(x,z,r)<top)return false;
+    for(const p of nearbyPlots(x,z,r+230))if(Math.hypot(p.x-x,p.z-z)<p.r+r+10)return false;
+    return true;
+  }
+  function tree(x,z,s=1,y=8,parent=surface){stats.trees++;add('cylinder',x,y+6*s,z,2*s,12*s,2*s,M.trim,0,null,parent);add('ico',x,y+18*s,z,10*s,16*s,10*s,M.leaf,rand()*6,null,parent)}
+  function building(x,z,w,d,h,tint,style='slab',base=6,rotation=0,parent=surface){
+    stats.buildings++;if(h>200)stats.highRises++;if(parent===academy)stats.academyBuildings++;
+    const record={x,z,w,d,h,style,base,rotation,campus:parent===academy,top:base+h+roofAllowance(style),r:footprint(w,d,style)};buildings.push(record);
+    const local=(u,v,y,ww,hh,dd,m,r=0,t=null)=>box(x+u*Math.cos(rotation)+v*Math.sin(rotation),y,z-u*Math.sin(rotation)+v*Math.cos(rotation),ww,hh,dd,m,rotation+r,t,parent);
+    box(x,base+4,z,w+12,8,d+12,M.dark,rotation,null,parent);
+    if(style==='octagonal'||style==='lantern')add('cylinder',x,base+h/2,z,w*.57,h,d*.57,facade,rotation,tint,parent);
+    else if(style==='courtyard'||style==='gallery'){local(-w*.36,0,base+h/2,w*.28,h,d,facade,0,tint);local(w*.36,0,base+h/2,w*.28,h,d,facade,0,tint);local(0,-d*.36,base+h/2,w*.44,h,d*.28,facade,0,tint);local(0,d*.36,base+h/2,w*.44,h,d*.28,facade,0,tint)}
+    else if(style==='blade'){local(-w*.23,0,base+h/2,w*.36,h,d,facade,0,tint);local(w*.23,d*.1,base+h*.38,w*.34,h*.76,d*.75,M.glass)}
+    else box(x,base+h/2,z,w,h,d,facade,rotation,tint,parent);
+    if(style==='terrace'||style==='ziggurat'||style==='mall'){for(let k=1;k<=3;k++)local(k*w*.075,0,base+h+k*13,w*(1-k*.16),26,d*(1-k*.12),facade,0,tint)}
+    if(style==='cantilever'){local(w*.28,0,base+h*.79,w*1.25,h*.15,d*.8,facade,0,tint);local(-w*.38,0,base+h*.48,w*.5,h*.12,d*1.12,M.trim)}
+    if(style==='twin'){local(-w*.32,0,base+h+35,w*.28,70,d*.7,facade,0,tint);local(w*.32,0,base+h+35,w*.28,70,d*.7,facade,0,tint)}
+    if(style!=='courtyard'&&style!=='gallery')local(0,0,base+h+2,w+4,4,d+4,M.roof);
+    const neon=pick([M.cyan,M.pink,M.amber,M.violet]);
+    if(style==='lantern'){add('cylinder',x,base+h+18,z,w*.58,32,d*.58,M.glass,rotation,null,parent);add('cylinder',x,base+h+36,z,w*.6,4,d*.6,neon,rotation,null,parent)}
+    if(style==='arcade'){for(let k=0;k<5;k++)local(-w*.4+k*w*.2,-d*.5-4,base+10,3,20,5,M.alloy);local(0,-d*.5-5,base+21,w,3,11,M.trim)}
+    if(style==='villa'){local(w*.17,0,base+h+5,w*.66,10,d*.74,facade,0,tint);local(0,0,base+h+12,w*1.1,3,d*1.08,M.alloy);local(-w*.18,0,base+h+15,w*.4,2,d*.65,M.glass)}
+    if(h>130){for(let k=1;k<=3;k++)local(0,-d*.5-2,base+h*k/4,w*.83,2,1.5,M.glass);local(-w*.36,-d*.5-2,base+h*.55,2,h*.78,2,neon);local(w*.33,-d*.5-2,base+h*.4,1.6,h*.35,2,neon)}
+    if(h>240){local(0,0,base+h+20,3,40,3,M.trim);local(0,0,base+h+43,4,5,4,neon)}
+    if(rand()<.29&&h>40){const bh=Math.min(55,h*.36);local(w*.49,-d*.5-4,base+h*.6,Math.min(w*.22,20),bh,4,neon);for(let i=0;i<4;i++)local(w*.49,-d*.5-7,base+h*.6-bh*.32+i*bh*.21,Math.min(w*.16,14),3,2,M.dark)}
+    if(rand()<.28&&base>=0)local(0,0,base+h+7,w*.24,11,d*.27,M.trim);
+    return record;
+  }
+  function placedBuilding(id,x,z,w,d,h,tint,style='slab',rotation=0,owner=null){const r=footprint(w,d,style),top=6+h+roofAllowance(style);if(!canPlace(x,z,r,top,owner))return null;const b=building(x,z,w,d,h,tint,style,6,rotation);b.id=id;b.checked=true;b.owner=owner;occupy({id,x,z,r,top,owner});return b}
+  // ONE indexed terrain surface, continuous from level streets to the northern/eastern ridges.
+  const islandVertices=[0,0,0],islandColors=[],indices=[],cliffVertices=[],N=240,RINGS=92;
+  const lowColor=new THREE.Color('#2e4054'),hillColor=new THREE.Color('#605e63'),rockColor=new THREE.Color('#858995'),vertexColor=new THREE.Color();
+  islandColors.push(...lowColor.toArray());
+  for(let j=1;j<=RINGS;j++)for(let i=0;i<N;i++){const a=i/N*TAU,r=coast(a)*j/RINGS,x=Math.cos(a)*r,z=Math.sin(a)*r,y=terrainHeight(x,z);islandVertices.push(x,y,z);stats.mountainPeak=Math.max(stats.mountainPeak,y);vertexColor.copy(lowColor).lerp(hillColor,smooth(30,400,y)).lerp(rockColor,smooth(850,2400,y));if(y>100)vertexColor.multiplyScalar(.88+.07*Math.sin(x*.012+z*.004)+.05*Math.cos(z*.017-x*.008));islandColors.push(...vertexColor.toArray())}
+  const vi=(j,i)=>1+(j-1)*N+(i+N)%N;
+  for(let i=0;i<N;i++)indices.push(0,vi(1,i+1),vi(1,i));
+  for(let j=1;j<RINGS;j++)for(let i=0;i<N;i++)indices.push(vi(j,i),vi(j,i+1),vi(j+1,i),vi(j,i+1),vi(j+1,i+1),vi(j+1,i));
+  const terrainGeometry=new THREE.BufferGeometry();terrainGeometry.setAttribute('position',new THREE.Float32BufferAttribute(islandVertices,3));terrainGeometry.setAttribute('color',new THREE.Float32BufferAttribute(islandColors,3));terrainGeometry.setIndex(indices);terrainGeometry.computeVertexNormals();
+  const terrain=mesh(terrainGeometry,mat('#ffffff',{vertexColors:true,flatShading:false,metalness:.04}));terrain.name='Continuous island terrain';
+  let area=0;
+  for(let i=0;i<N;i++){
+    const a=i/N*TAU,b=(i+1)/N*TAU,r=coast(a),s=coast(b),x=r*Math.cos(a),z=r*Math.sin(a),xx=s*Math.cos(b),zz=s*Math.sin(b);
+    area+=Math.abs(x*zz-z*xx)/2;const y1=terrainHeight(x,z),y2=terrainHeight(xx,zz);
+    const foot=.88+.025*Math.sin(a*7),yy=-480-90*Math.sin(a*5);cliffVertices.push(x,y1,z,xx,y2,zz,xx*foot,yy,zz*foot,x,y1,z,xx*foot,yy,zz*foot,x*foot,yy,z*foot);
+    if(i%3===0&&y1<80){beam(V(x,y1+12,z),V(xx,y2+12,zz),5,3,i%4?M.cyan:M.pink);box(x,y1-130,z,12,270,12,M.dark);box(x,y1-135,z,3,230,3,M.cyan)}
+  }
+  const cliffGeometry=new THREE.BufferGeometry();cliffGeometry.setAttribute('position',new THREE.Float32BufferAttribute(cliffVertices,3));cliffGeometry.computeVertexNormals();mesh(cliffGeometry,M.cliff);
+  for(let z=-6200;z<6200;z+=100)for(let x=-6200;x<6200;x+=100)if(inside(x,z)&&terrainHeight(x,z)>50)stats.mountainKm2+=.01;
+  stats.mountainKm2=Math.round(stats.mountainKm2*10)/10;
+  stats.mountainPeak=Math.round(stats.mountainPeak);
+  stats.areaKm2=Math.round(area/1e6*10)/10;
+  const seaMat=mat('#081923',{roughness:.32,metalness:.6});seaMat.colorNode=mix(color('#07121f'),color('#153043'),sin(positionWorld.x.mul(.002).add(positionWorld.z.mul(.001)).add(clock.mul(.08))).mul(.5).add(.5));
+  const sea=mesh(new THREE.CircleGeometry(35000,96),seaMat,0,-550,0);sea.rotation.x=-Math.PI/2;sea.castShadow=false;
+  // A spatial road index keeps procedural buildings away from road decks at all heights.
+  const roadCells=new Map(),cellSize=220;
+  const supports=[];
+  function indexSegment(a,b,width,support=false){const segment={a,b,width,support};const pad=width/2+25;for(let x=Math.floor((Math.min(a.x,b.x)-pad)/cellSize);x<=Math.floor((Math.max(a.x,b.x)+pad)/cellSize);x++)for(let z=Math.floor((Math.min(a.z,b.z)-pad)/cellSize);z<=Math.floor((Math.max(a.z,b.z)+pad)/cellSize);z++){const key=x+','+z;if(!roadCells.has(key))roadCells.set(key,[]);roadCells.get(key).push(segment)}}
+  function roadClearance(x,z,r){let ceiling=1800;const nearby=new Set();for(let i=Math.floor((x-r-40)/cellSize);i<=Math.floor((x+r+40)/cellSize);i++)for(let j=Math.floor((z-r-40)/cellSize);j<=Math.floor((z+r+40)/cellSize);j++)for(const s of roadCells.get(i+','+j)||[])nearby.add(s);for(const s of nearby){const dx=s.b.x-s.a.x,dz=s.b.z-s.a.z,t=clamp(((x-s.a.x)*dx+(z-s.a.z)*dz)/(dx*dx+dz*dz||1),0,1);if(Math.hypot(x-s.a.x-dx*t,z-s.a.z-dz*t)<r+s.width/2+14){const y=s.a.y+(s.b.y-s.a.y)*t;if(s.support||y<45)return 0;ceiling=Math.min(ceiling,Math.min(s.a.y,s.b.y)-25)}}return ceiling}
+  function urbanPoint(p){
+    // A district-scale northern development boundary leaves the high barren ridges road-free.
+    if(p.z<-2350){const weight=smooth(-1900,0,p.x);p.z+=(-2350-p.z)*weight*.96}
+    const a=Math.atan2(p.z,p.x),r=Math.hypot(p.x,p.z),limit=coast(a)-110;if(r>limit){p.x*=limit/r;p.z*=limit/r}return p;
+  }
+  function routeCampus(controls,closed){
+    const school=siteById.academy,rx=school.rx+175,rz=school.rz+175;
+    const metric=p=>Math.hypot((p.x-school.x)/rx,(p.z-school.z)/rz);
+    const angle=p=>Math.atan2((p.z-school.z)/rz,(p.x-school.x)/rx);
+    const at=(a,y)=>V(school.x+Math.cos(a)*rx,y,school.z+Math.sin(a)*rz);
+    const base=new THREE.CatmullRomCurve3(controls,closed,'centripetal');
+    let raw=base.getSpacedPoints(Math.max(24,Math.ceil(base.getLength()/90)));
+    if(closed){raw.pop();const start=raw.findIndex(p=>metric(p)>=1.02);if(start>0)raw=raw.slice(start).concat(raw.slice(0,start));raw.push(raw[0].clone())}
+    if(metric(raw[0])<1)raw[0]=at(angle(raw[0]),raw[0].y);
+    const nodes=[raw[0]];
+    for(let i=1;i<raw.length;i++){
+      if(metric(raw[i])>=1){nodes.push(raw[i]);continue}
+      const entry=nodes[nodes.length-1];let j=i;while(j<raw.length&&metric(raw[j])<1)j++;
+      if(j===raw.length&&!closed){nodes.push(at(angle(raw[i]),raw[i].y));break}
+      const exit=j<raw.length?raw[j]:at(angle(raw[raw.length-1]),raw[raw.length-1].y),aa=angle(entry),bb=angle(exit);
+      let delta=((bb-aa+Math.PI*3)%TAU)-Math.PI;const steps=Math.max(3,Math.ceil(Math.abs(delta)/.055));
+      for(let k=0;k<=steps;k++)nodes.push(at(aa+delta*k/steps,entry.y+(exit.y-entry.y)*k/steps));
+      nodes.push(exit);i=j;
+    }
+    const unique=nodes.filter((p,i)=>!i||p.distanceTo(nodes[i-1])>2);if(closed&&unique[0].distanceTo(unique[unique.length-1])<2)unique.pop();
+    // Fillet the approach/arc joins over a meaningful road-scale length, not a tiny sharp cusp.
+    let rounded=[unique[0]];for(let i=1;i<unique.length;i++)if(unique[i].distanceTo(rounded[rounded.length-1])>=300||i===unique.length-1)rounded.push(unique[i]);
+    if(closed)while(rounded.length>4&&rounded[rounded.length-1].distanceTo(rounded[0])<300)rounded.pop();
+    for(let round=0;round<4;round++){const next=closed?[]:[rounded[0]];for(let i=0;i<(closed?rounded.length:rounded.length-1);i++){const a=rounded[i],b=rounded[(i+1)%rounded.length];next.push(a.clone().lerp(b,.25),a.clone().lerp(b,.75))}if(!closed)next.push(rounded[rounded.length-1]);rounded=next}
+    return new THREE.CatmullRomCurve3(rounded,closed,'centripetal');
+  }
+  function road(name,controls,{closed=false,width=32,elevated=false,material=M.cyan,parent=elevated?airways:surface,index=true,count=true}={}){
+    const spline=routeCampus(controls,closed),samples=Math.max(36,Math.ceil(spline.getLength()/32));
+    const routed=spline.getSpacedPoints(samples),points=[],vertices=[],up=V(0,1,0),sides=[];
+    for(const p of routed){p.y+=terrainHeight(p.x,p.z)+allRoads.length*.017;const last=points[points.length-1];if(last&&Math.hypot(p.x-last.x,p.z-last.z)<.5)last.y=Math.max(last.y,p.y);else points.push(p)}
+    // Grade-constrained smoothing only raises decks: it cannot drive a road through the ground.
+    for(let round=0;round<3;round++){
+      for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i];b.y=Math.max(b.y,a.y-.28*Math.hypot(b.x-a.x,b.z-a.z))}
+      for(let i=points.length-2;i>=0;i--){const a=points[i],b=points[i+1];a.y=Math.max(a.y,b.y-.28*Math.hypot(b.x-a.x,b.z-a.z))}
+      if(closed)points[0].y=points[points.length-1].y=Math.max(points[0].y,points[points.length-1].y);
+    }
+    // The same final piecewise curve drives deck geometry, the collision index and moving traffic.
+    const curve=new THREE.CurvePath();for(let i=1;i<points.length;i++)if(points[i].distanceTo(points[i-1])>.01)curve.add(new THREE.LineCurve3(points[i-1],points[i]));curve.getLength();
+    for(let i=0;i<points.length;i++){const before=points[Math.max(0,i-1)],after=points[Math.min(points.length-1,i+1)],t=after.clone().sub(before).normalize();sides.push(new THREE.Vector3().crossVectors(t,up).normalize())}
+    for(let i=0;i<points.length-1;i++){
+      const a=points[i],b=points[i+1],n=sides[i],nn=sides[i+1],p=a.clone().addScaledVector(n,width/2),q=a.clone().addScaledVector(n,-width/2),r=b.clone().addScaledVector(nn,width/2),s=b.clone().addScaledVector(nn,-width/2);
+      vertices.push(...p.toArray(),...q.toArray(),...r.toArray(),...q.toArray(),...s.toArray(),...r.toArray());
+      if(index)indexSegment(a,b,width);stats.roadSegments++;
+      if(elevated||a.y-terrainHeight(a.x,a.z)>22){beam(a.clone().addScaledVector(n,width*.49).add(V(0,2,0)),b.clone().addScaledVector(nn,width*.49).add(V(0,2,0)),2.1,2.2,material,parent);beam(a.clone().addScaledVector(n,-width*.49).add(V(0,2,0)),b.clone().addScaledVector(nn,-width*.49).add(V(0,2,0)),2.1,2.2,material,parent);beam(a.clone().add(V(0,-5,0)),b.clone().add(V(0,-5,0)),width*.56,8,M.dark,parent);
+        if(i%15===0&&a.y-terrainHeight(a.x,a.z)>70){const ground=terrainHeight(a.x,a.z);box(a.x,(a.y+ground)/2-3,a.z,10,a.y-ground-6,10,M.trim,0,null,parent);beam(V(a.x-32,a.y-50,a.z),a,6,6,M.trim,parent);beam(V(a.x+32,a.y-50,a.z),a,6,6,M.trim,parent);indexSegment(a,a,76,true);supports.push({x:a.x,z:a.z,r:38,ground,top:a.y})}}
+      else if(i%3===0){beam(a.clone().addScaledVector(n,width*.46).add(V(0,.8,0)),b.clone().addScaledVector(nn,width*.46).add(V(0,.8,0)),1.4,.8,material,parent)}
+      if(i%2===0){const c=a.clone().lerp(b,.34).add(V(0,1,0)),d=a.clone().lerp(b,.55).add(V(0,1,0));beam(c,d,1,1,M.white,parent)}
+    }
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.computeVertexNormals();const ribbon=mesh(geometry,M.road,0,0,0,parent);ribbon.material.side=THREE.DoubleSide;ribbon.name=name;ribbon.castShadow=elevated;
+    const data={name,elevated,width,curve,closed,avoidance:['academy'],segments:points.map(p=>({x:p.x,y:p.y,z:p.z}))};allRoads.push(data);if(count){roadGraph.push(data);stats.majorRoads++;if(elevated)stats.skyways++}return data;
+  }
+  const names=['时序','星空','回声','幻影','梧桐','流光','无尽','长风','白塔','灵犀','穹顶','新生','晨曦','青岚','量子','深蓝','折光','涟漪','极昼','学园','归途','远星','天幕','光谱'];
+  // 24 irregular radials and 12 broken/eccentric loops, rather than an orthogonal grid.
+  for(let j=0;j<24;j++){const pts=[],baseAngle=j/24*TAU,northFactor=smooth(-.55,-.1,Math.cos(baseAngle))*smooth(.4,.9,-Math.sin(baseAngle)),endRadius=5780-3480*northFactor;for(let k=0;k<=17;k++){const r=1050+(endRadius-1050)*k/17,a=baseAngle+.10*Math.sin(k*.46+j*.72)+.025*k/17;pts.push(urbanPoint(V(Math.cos(a)*r,7,Math.sin(a)*r)))}road(names[j]+'大道',pts,{width:j%3?30:48,material:j%4?M.cyan:M.amber})}
+  const ringRadii=[1140,1460,1790,2110,2450,2800,3160,3570,3990,4510,5480,5830];
+  for(let j=0;j<12;j++){const pts=[],r=ringRadii[j];for(let k=0;k<72;k++){const a=k/72*TAU,rr=r+65*Math.sin(a*3+j*.8)+45*Math.cos(a*5-j);pts.push(urbanPoint(V(Math.cos(a)*rr,8+j%3,Math.sin(a)*rr)))}road(names[j]+'环街',pts,{closed:true,width:j%3?26:44,material:j%2?M.cyan:M.pink})}
+  // 12 banked-in-plan aerial express loops + 8 rising connections; each has real deck geometry.
+  for(let j=0;j<12;j++){const pts=[],r=1550+j*315;for(let k=0;k<48;k++){const a=k/48*TAU,rr=r+160*Math.sin(a*2+j*.75)+130*Math.cos(a*3-j*.9);const y=180+(j%4)*130+50*(1+Math.sin(a*2+j));pts.push(urbanPoint(V(Math.cos(a)*rr,y,Math.sin(a)*rr)))}road(names[j]+'空中快速路',pts,{closed:true,width:j%3?34:46,elevated:true,material:j%3===0?M.pink:j%3===1?M.cyan:M.amber})}
+  for(let j=0;j<8;j++){const pts=[];for(let k=0;k<=24;k++){const t=k/24,a=j/8*TAU+t*.75,r=1700+t*3550,y=12+Math.sin(Math.PI*t)*420;pts.push(urbanPoint(V(Math.cos(a)*r,y,Math.sin(a)*r)))}road(names[j]+'螺旋联络线',pts,{elevated:true,width:30,material:j%2?M.pink:M.cyan})}
+  // Railways are indexed BEFORE building placement, exactly like roads.
+  for(let j=0;j<3;j++){const pts=[];for(let k=0;k<48;k++){const a=k/48*TAU,r=1900+j*1200+150*Math.sin(a*3+j);pts.push(urbanPoint(V(Math.cos(a)*r,110+j*75,Math.sin(a)*r)))}const data=road('轨道 '+(j+1),pts,{closed:true,width:13,elevated:true,material:[M.ice,M.amber,M.violet][j],parent:surface,count:false});trainRoutes.push(data.curve);for(let k=1;k<data.segments.length;k++){const a=data.segments[k-1],b=data.segments[k];beam(V(a.x,a.y+13,a.z),V(b.x,b.y+13,b.z),8,3,[M.cyan,M.amber,M.violet][j],metro)}}
+  const school=siteById.academy,gateAngle=Math.acos((3100-school.x)/school.rx),gateZ=school.z+Math.sin(gateAngle)*school.rz;
+  const entryA=V(3100,8,gateZ-45),entryB=V(3100,8,gateZ+225);indexSegment(entryA,entryB,76);allRoads.push({name:'学园入口接驳道',width:76,elevated:false,campus:true,segments:[entryA,entryB]});
+  // Pick feasible urban blocks from the finished network; roads never receive these plot positions.
+  const allocated=[siteById.tower,siteById.academy];
+  function assignSite(id,probeRadius,top,reserveRadius=probeRadius+20,preferred=null){
+    const s=siteById[id],cx=preferred?.[0]??s.x,cz=preferred?.[1]??s.z;
+    const fits=(x,z)=>inside(x,z,reserveRadius+35)&&terrainHeight(x,z)<.5&&allocated.every(a=>siteDistance(x,z,a)>reserveRadius+35)&&roadClearance(x,z,probeRadius)>top;
+    let found=null;
+    for(let distance=0;distance<=5600&&!found;distance+=65){const count=distance?Math.max(16,Math.ceil(TAU*distance/65)):1;for(let k=0;k<count;k++){const a=k/count*TAU,x=cx+Math.cos(a)*distance,z=cz+Math.sin(a)*distance;if(fits(x,z)){found={x,z};break}}}
+    if(!found)throw new Error('路网中没有可用街区：'+id);
+    Object.assign(s,found,{r:reserveRadius,queryRadius:probeRadius});delete s.hw;delete s.hd;allocated.push(s);parcelEnvelopes.push({id,x:s.x,z:s.z,r:probeRadius,top});
+  }
+  assignSite('mall',260,220,285);assignSite('park',230,120,255);
+  assignSite('station',240,280,265);assignSite('port',260,270,285);
+  assignSite('villas',180,80,575);
+  assignSite('clinic',105,85,125,[5050,500]);assignSite('cafe',130,90,155,[4780,620]);
+  assignSite('home',205,150,230);assignSite('phantom',170,570,195);assignSite('committee',220,400,245);
+  assignSite('prison',210,150,240,[-2500,-4850]);
+  const reserved=(x,z,p=0)=>sites.some(s=>siteDistance(x,z,s)<p);
+  // Jittered close-packed plots align to local curved roads; sparse mega-towers puncture the canopy.
+  const palette=['#55758b','#606983','#748199','#536e8e','#6c5d80','#477583','#79627f'];
+  for(let iz=-58;iz<=58;iz++)for(let ix=-58;ix<=58;ix++){
+    const x=ix*106+(iz%2)*51+between(-23,23),z=iz*106+between(-23,23);if(!inside(x,z,100)||reserved(x,z,65)||terrainHeight(x,z)>3)continue;
+    const w=between(32,67),d=between(32,64);
+    const dist=Math.hypot(x,z),a=Math.atan2(z,x),cluster=Math.max(0,Math.sin(a*3+.7)*Math.cos(dist*.0013));
+    const zone=x<-2800&&z<1700&&z>-1800?'nightlife':z<-3500?'research':x>3400&&z>1900?'industry':dist<2500?'business':z>2900?'south':x>1700?'campus':'residential';
+    let h=zone==='business'?between(125,350)+cluster*120:zone==='industry'?between(20,52):between(26,110)+cluster*45;if(zone!=='business'&&rand()<.035)h+=between(100,230);
+    const rot=a+Math.PI/2+between(-.36,.36),style=zone==='industry'?'arcade':pick(zone==='business'?['blade','twin','lantern','cantilever','octagonal']:['slab','arcade','courtyard','terrace','ziggurat','lantern']);
+    const r=footprint(w,d,style),ceiling=roadClearance(x,z,r);h=Math.min(h,ceiling-roofAllowance(style)-14);if(h<18)continue;
+    const b=placedBuilding('block-'+ix+'-'+iz,x,z,w,d,h,pick(palette),style,rot);if(!b)continue;b.zone=zone;stats.districts[zone]=(stats.districts[zone]||0)+1;
+  }
+  // White-alloy colossal tower: nine buttresses, suspended crowns, lift ribs, 3.2 km pinnacle.
+  ring(0,7,0,890,32,M.trim,tower);ring(0,10,0,847,6,M.cyan,tower);ring(0,12,0,470,240,M.dark,tower);
+  mesh(new THREE.CylinderGeometry(345,430,120,12),M.alloy,0,66,0,tower);
+  mesh(new THREE.CylinderGeometry(205,300,940,9),M.alloy,0,590,0,tower);
+  mesh(new THREE.CylinderGeometry(105,205,1130,9),M.alloy,0,1625,0,tower);
+  mesh(new THREE.CylinderGeometry(52,105,520,9),M.alloy,0,2450,0,tower);
+  mesh(new THREE.ConeGeometry(55,420,9),M.alloy,0,2920,0,tower);
+  add('octa',0,3120,0,35,80,35,M.ice,0,null,tower);
+  for(let j=0;j<9;j++){
+    const a=j/9*TAU,c=Math.cos(a),s=Math.sin(a);building(c*635,s*635,86,100,260+(j%3)*110,'#839bb0','terrace',7,-a,tower);
+    const pts=[V(c*690,30,s*690),V(c*470,220,s*470),V(c*325,720,s*325),V(c*212,1510,s*212),V(c*123,2250,s*123)];
+    for(let k=1;k<pts.length;k++){beam(pts[k-1],pts[k],24-k*3,26-k*3,M.alloy,tower);beam(pts[k-1].clone().add(V(c*17,0,s*17)),pts[k].clone().add(V(c*17,0,s*17)),4,4,M.ice,tower)}
+    beam(V(c*210,350,s*210),V(c*108,2290,s*108),6,6,M.cyan,tower);beam(V(c*440,115,s*440),V(c*785,115,s*785),34,12,M.trim,tower);
+    add('octa',c*785,100,s*785,17,65,17,M.cyan,0,null,tower);
+  }
+  for(const [y,r] of [[880,390],[1610,300],[2270,230],[2670,145]]){
+    const o=mesh(new THREE.TorusGeometry(r,12,5,64,Math.PI*1.78),M.alloy,0,y,0,tower);o.rotation.x=Math.PI/2;o.rotation.z=y*.003;
+    const glowRing=mesh(new THREE.TorusGeometry(r+10,2.8,4,64,Math.PI*1.78),M.ice,0,y+5,0,tower);glowRing.rotation.copy(o.rotation);
+    for(let j=0;j<9;j++){const a=j/9*TAU;beam(V(Math.cos(a)*r,y,Math.sin(a)*r),V(Math.cos(a)*r*.5,y+90,Math.sin(a)*r*.5),5,5,M.alloy,tower)}
+  }
+  for(let j=0;j<9;j++)for(const [y,r] of [[390,305],[1140,214],[1870,150]]){const a=j/9*TAU,x=Math.cos(a)*r,z=Math.sin(a)*r;box(x,y,z,62,150,85,M.alloy,-a,null,tower);box(x+Math.cos(a)*35,y,z+Math.sin(a)*35,4,140,4,M.cyan,-a,null,tower);beam(V(x,y-75,z),V(x*.78,y-155,z*.78),10,10,M.alloy,tower)}
+  for(let j=0;j<3;j++){const pts=[];for(let k=0;k<=70;k++){const a=k/70*TAU*1.7+j/3*TAU,y=220+k/70*2220,r=275-y*.064;pts.push(V(Math.cos(a)*r,y,Math.sin(a)*r))}for(let k=1;k<pts.length;k++)beam(pts[k-1],pts[k],3,3,j%2?M.cyan:M.ice,tower)}
+  stats.buildings++;buildings.push({x:0,z:0,w:860,d:860,h:3200,base:0,style:'fantasia-tower',rotation:0});
+  // Academy: vast, articulated eagle-wing main block and genuinely separate facilities.
+  const ax=3100,az=-1320;
+  const campusGround=mesh(new THREE.CircleGeometry(1,120),M.dark,school.x,6,school.z,academy);campusGround.rotation.x=-Math.PI/2;campusGround.scale.set(school.rx-20,school.rz-20,1);
+  box(ax,19,-550,1200,12,610,M.trim,0,null,academy);box(ax,26,-510,890,4,445,M.ground,0,null,academy);
+  building(ax,az,215,220,430,'#9aabc2','terrace',20,0,academy);
+  mesh(new THREE.ConeGeometry(145,215,4),M.alloy,ax,575,az,academy).rotation.y=Math.PI/4;
+  box(ax,356,az-115,13,530,8,M.ice,0,null,academy);
+  // Each swept wing has interlocking masses, diagonal spines, ribs and elevated galleries.
+  for(const side of [-1,1])for(let k=0;k<5;k++){
+    const x=ax+side*(200+k*155),z=az-25-k*49,h=330-k*43,rot=side*.3;
+    building(x,z,185,170,h,k%2?'#6e829f':'#879bb6','cantilever',20,rot,academy);
+    beam(V(x-side*90,30+h,z+50),V(x+side*95,30+h-32,z-30),28,12,M.alloy,academy);
+    for(let p=0;p<4;p++)box(x+side*(p-1.5)*35,70+h*.45,z+89,7,h*.76,7,M.alloy,rot,null,academy);
+    box(x,85,z+103,178,13,32,M.trim,rot,null,academy);box(x,95,z+115,176,3,3,M.cyan,rot,null,academy);
+  }
+  for(const x of [1990,4210]){
+    building(x,-1200,230,290,180,'#667b99','twin',15,0,academy);
+    add('cylinder',x,80,-1570,155,140,155,M.academy,0,null,academy);ring(x,155,-1570,145,8,M.violet,academy);
+    const shell=mesh(new THREE.SphereGeometry(148,16,8,0,TAU,0,Math.PI/2),M.glass,x,155,-1570,academy);shell.scale.y=.55;
+    add('octa',x,240,-1570,25,60,25,M.violet,0,null,academy);
+    beam(V(x,95,-1200),V(ax+(x<ax?-760:760),95,-1400),24,10,M.trim,academy);
+  }
+  // Monumental gate on the Main Quad's approach axis; guard pavilions sit inside the enclosure.
+  const mainGate=new THREE.Group();mainGate.name='Academy monumental main gate';academy.add(mainGate);
+  for(const side of [-1,1]){const x=ax+side*185;building(x,gateZ,56,26,116,'#a0b3c9','slab',7,0,academy);box(x,75,gateZ-16,9,126,5,M.cyan,0,null,academy);beam(V(x,131,gateZ),V(ax,165,gateZ),25,19,M.alloy,mainGate);building(ax+side*230,gateZ-240,105,72,34,'#6f88a0','arcade',7,0,academy);box(ax+side*100,10,gateZ-8,10,8,66,M.trim,0,null,academy)}
+  box(ax,142,gateZ+3,280,27,14,M.dark,0,null,mainGate);add('octa',ax,182,gateZ,25,32,12,M.ice,0,null,mainGate);
+  beam(V(ax-72,155,gateZ),V(ax-15,181,gateZ),10,7,M.alloy,mainGate);beam(V(ax+72,155,gateZ),V(ax+15,181,gateZ),10,7,M.alloy,mainGate);
+  beam(entryA,entryB,76,4,M.road,academy);
+  // Low open protective railing follows the common academic/arena boundary, with three gates.
+  const fencePoints=[];for(let i=0;i<=720;i++){const a=i/720*TAU;fencePoints.push(V(school.x+Math.cos(a)*school.rx,8,school.z+Math.sin(a)*school.rz))}
+  const wrapped=a=>Math.atan2(Math.sin(a),Math.cos(a));
+  for(let i=1;i<fencePoints.length;i++){const a=(i-.5)/720*TAU;if(Math.abs(wrapped(a-gateAngle))<.092||Math.abs(wrapped(a))<.03||Math.abs(wrapped(a-4.7))<.027)continue;const p=fencePoints[i-1],q=fencePoints[i];beam(p,q,5,6,M.trim,academy);beam(p.clone().add(V(0,12,0)),q.clone().add(V(0,12,0)),2,2,M.alloy,academy);beam(p.clone().add(V(0,5,0)),q.clone().add(V(0,5,0)),2,2,M.alloy,academy);box(p.x,15,p.z,2,14,2,M.alloy,0,null,academy);if(i%4===0){box(p.x,18,p.z,7,23,7,M.trim,0,null,academy);box(p.x,31,p.z,8,3,8,M.cyan,0,null,academy)}stats.campusFenceSegments++}
+  stats.campusGates=3;
+  // Stanford-inspired connected quadrangles and arcades, retaining the eagle-wing focal building.
+  const campusGrass=mat('#416c65'),campusPaving=mat('#82949e'),arcGeometry=new THREE.TorusGeometry(1,.14,4,14,Math.PI);
+  function arcade(a,b,y=31){const len=a.distanceTo(b),n=Math.max(2,Math.floor(len/40)),direction=b.clone().sub(a).normalize(),rotation=Math.atan2(direction.z,direction.x);beam(V(a.x,y+35,a.z),V(b.x,y+35,b.z),22,6,M.trim,academy);for(let i=0;i<=n;i++){const p=a.clone().lerp(b,i/n);box(p.x,y+9,p.z,5,18,5,M.alloy,0,null,academy);if(i<n){const mid=a.clone().lerp(b,(i+.5)/n),arch=mesh(arcGeometry,M.alloy,mid.x,y+18,mid.z,academy);arch.scale.set(len/n/2,15,2);arch.rotation.y=-rotation}}}
+  function quad(cx,cz,w,d,height=64,base=30){
+    building(cx-w/2+32,cz,64,d,height,'#849bb3','slab',base,0,academy);building(cx+w/2-32,cz,64,d,height,'#849bb3','slab',base,0,academy);
+    building(cx,cz-d/2+30,w-128,60,height,'#8ea2b8','slab',base,0,academy);building(cx,cz+d/2-30,w-128,60,height,'#8ea2b8','slab',base,0,academy);
+    box(cx,base+1,cz,w-160,2,d-140,campusGrass,0,null,academy);
+    const xx=w/2-84,zz=d/2-78;arcade(V(cx-xx,0,cz-zz),V(cx+xx,0,cz-zz),base);arcade(V(cx-xx,0,cz+zz),V(cx+xx,0,cz+zz),base);arcade(V(cx-xx,0,cz-zz),V(cx-xx,0,cz+zz),base);arcade(V(cx+xx,0,cz-zz),V(cx+xx,0,cz+zz),base);
+    for(const dx of [-w*.18,w*.18])for(const dz of [-d*.15,d*.15]){ring(cx+dx,base+3,cz+dz,18,4,M.alloy,academy,16);tree(cx+dx,cz+dz,.9,base+4,academy)}
+  }
+  quad(2700,-650,465,375,67);quad(3500,-650,465,375,67);
+  quad(3920,-2400,340,330,65,12);quad(2100,-2280,230,230,45,12);
+  for(const x of [2700,3500]){building(x,-1070,280,125,76,'#819ab5','terrace',14,0,academy);building(x,-220,255,140,46,'#8c9cb4','arcade',12,0,academy);building(x,-112,180,54,35,'#7d98b0','arcade',10,0,academy)}
+  for(const x of [1790,4380])for(const z of [-595,-1000,-2180])building(x,z,70,70,40,'#8396aa','terrace',12,0,academy);
+  // Activities, dormitory courtyards, bridges, lecture halls and the rear energy-absorbing grounds.
+  for(const side of [-1,1])for(let row=0;row<5;row++)for(let col=0;col<3;col++){
+    const x=ax+side*(940+col*145),z=row===0?-470:-370-row*410,h=between(65,140);building(x,z,96,145,h,'#6d7f99','slab',12,side*.06,academy);
+    if(col>0)beam(V(x-side*145,70,z),V(x,70,z),12,8,M.trim,academy);
+  }
+  for(let i=0;i<5;i++)building(2710+i*195,-1890,145,116,80+i%2*30,'#728da6','terrace',12,0,academy);
+  for(const side of [-1,1])for(const [i,z] of [-325,-505,-685,-1100].entries()){const x=ax+side*720;building(x,z,105,108,58+i%3*16,'#8193ad','terrace',12,side*.08,academy)}
+  for(let i=0;i<6;i++)building(2710+i*185,-2650,135,106,62+i%2*28,'#7c8fa9','slab',12,0,academy);
+  box(3180,14,-2290,720,10,450,M.roof,0,null,academy);ring(3180,21,-2290,175,8,M.cyan,academy).scale.set(1.65,1,1);
+  for(let i=0;i<6;i++){const x=2880+i%3*295,z=-2160-Math.floor(i/3)*270;box(x,22,z,245,3,185,M.dark,0,null,academy);for(const dx of [-122,122])box(x+dx,26,z,2,2,185,M.violet,0,null,academy)}
+  // The novel's brown-grey eight-storey castle library: broad, heavy and intricately buttressed.
+  const lx=2430,lz=-2440;building(lx,lz,280,200,72,'#736575','slab',14,0,academy);
+  for(const dx of [-135,135])for(const dz of [-98,98]){building(lx+dx,lz+dz,48,48,105,'#6f6373','slab',12,0,academy);mesh(new THREE.ConeGeometry(40,65,4),M.roof,lx+dx,150,lz+dz,academy).rotation.y=Math.PI/4}
+  for(let k=0;k<9;k++){box(lx-112+k*28,99,lz-104,13,19,12,M.trim,0,null,academy);box(lx-112+k*28,58,lz+104,8,58,10,M.alloy,0,null,academy)}
+  for(let i=0;i<35;i++)tree(between(2150,3930),pick([-2790,-120]),between(.9,1.6),8,academy);
+  // Valley amphitheatre with a structural outer shell, soaring pylons and a live energy screen.
+  const arena=new THREE.Group();arena.name='Academy arena precinct';academy.add(arena);arena.position.set(4980,0,-1450);
+  for(let k=0;k<10;k++)ring(0,22+k*13,0,240+k*15,16,k%2?M.academy:M.alloy,arena);
+  const field=mesh(new THREE.CircleGeometry(234,48),M.roof,0,12,0,arena);field.rotation.x=-Math.PI/2;
+  ring(0,16,0,223,3,M.cyan,arena);ring(0,168,0,401,28,M.alloy,arena);ring(0,177,0,414,4,M.violet,arena);
+  for(let i=0;i<32;i++){const a=i/32*TAU;beam(V(Math.cos(a)*450,6,Math.sin(a)*450),V(Math.cos(a)*395,169,Math.sin(a)*395),12,12,M.trim,arena);if(i%4===0){box(Math.cos(a)*440,150,Math.sin(a)*440,10,290,10,M.alloy,0,null,arena);add('octa',Math.cos(a)*440,315,Math.sin(a)*440,14,22,14,M.violet,0,null,arena)}}
+  const shieldMat=new THREE.MeshBasicNodeMaterial({side:THREE.DoubleSide,transparent:true,depthWrite:false,colorNode:color('#7ec8ff'),opacityNode:sin(positionWorld.y.mul(.1).sub(clock)).mul(.025).add(.045)});
+  mesh(new THREE.CylinderGeometry(232,232,150,48,1,true),shieldMat,0,91,0,arena).castShadow=false;
+  stats.buildings++;buildings.push({x:4980,z:-1450,w:900,d:900,h:340,base:0,style:'arena',rotation:0});
+  // Campus circulation: perimeter service loop, cross streets, courtyard walks and ceremonial arena link.
+  function campusLane(name,points,width=24,m=M.road){for(let i=1;i<points.length;i++)beam(points[i-1],points[i],width,2,m,academy);campusPaths.push({name,width,segments:points.map(p=>({x:p.x,y:p.y,z:p.z}))});stats.campusRoads++}
+  const perimeter=[];for(let i=0;i<=144;i++){const a=i/144*TAU;perimeter.push(V(school.x+Math.cos(a)*2090,10,school.z+Math.sin(a)*1640))}campusLane('校园环行路',perimeter,26);
+  campusLane('学园主轴', [V(ax,10,gateZ),V(ax,31,-410),V(ax,31,-850),V(ax,15,-1190)],66,campusPaving);
+  campusLane('南院路',[V(1780,11,-65),V(4400,11,-65)],24);
+  campusLane('学术横轴',[V(1660,11,-920),V(4380,11,-920)],28);
+  campusLane('训练后街',[V(1730,11,-1790),V(4350,11,-1790)],24);
+  campusLane('北馆路',[V(2240,11,-2760),V(3970,11,-2760)],22);
+  campusLane('西生活连街',[V(2260,11,-2110),V(2260,11,-1790),V(1710,11,-1790),V(1710,11,-920),V(2260,11,-920),V(2260,11,-100)],22);
+  campusLane('东生活连街',[V(3940,11,-2110),V(3940,11,-1790),V(4450,11,-1790),V(4450,11,-920),V(3940,11,-920),V(3940,11,-100)],22);
+  campusLane('图书馆步道',[V(2630,17,-2690),V(2630,17,-1980)],12,campusPaving);
+  campusLane('选战仪式大道',[V(ax,13,-920),V(4510,13,-920),V(4980,13,-920)],58,campusPaving);
+  campusLane('会场入场步道',[V(4980,14,-920),V(4980,26,-1065)],96,campusPaving);
+  box(4980,11,-930,630,6,200,campusPaving,0,null,academy);
+  for(const x of [4680,5280]){building(x,-855,42,42,58,'#91a6ba','slab',13,0,academy);box(x,67,-830,19,50,3,M.violet,0,null,academy)}
+  for(let i=0;i<8;i++){const x=4520+i*73;box(x,36,-853,2,48,2,M.alloy,0,null,academy);box(x+9,46,-853,15,26,2,i%2?M.violet:M.cyan,0,null,academy)}
+  for(const x of [3040,3160])for(let i=0;i<13;i++){const z=175-i*88;tree(x,z,.92,31,academy);box(x+24,35,z,13,4,5,M.trim,0,null,academy)}
+  for(const [x,z] of [[2700,-650],[3500,-650],[3920,-2400],[2100,-2280]]){add('cylinder',x,35,z,13,8,13,M.alloy,0,null,academy);add('octa',x,51,z,8,18,8,M.violet,0,null,academy)}
+  // Small named sites use the same checked-placement path as procedural buildings.
+  const required=(id,...args)=>{const b=placedBuilding(id,...args);if(!b)throw new Error('地标布局未通过净空检查：'+id);return b};
+  const clinic=siteById.clinic,cafe=siteById.cafe;
+  required('clinic',clinic.x,clinic.z,75,70,26,'#697c96','slab',.1,'clinic');box(clinic.x,29,clinic.z-39,28,5,3,M.cyan);box(clinic.x,29,clinic.z-39,5,24,3,M.cyan);
+  required('cafe',cafe.x,cafe.z,92,60,20,'#80637c','arcade',0,'cafe');box(cafe.x,24,cafe.z-35,75,4,3,M.amber);
+  box(cafe.x,2,cafe.z-65,112,3,45,M.trim);for(let i=0;i<3;i++){add('cylinder',cafe.x-35+i*35,9,cafe.z-61,8,2,8,M.alloy);box(cafe.x-35+i*35,5,cafe.z-61,2,8,2,M.trim)}
+  const home=siteById.home,phantom=siteById.phantom,committee=siteById.committee,prison=siteById.prison,station=siteById.station,port=siteById.port;
+  required('home',home.x-50,home.z-40,70,65,58,'#6d566b','terrace',.25,'home');
+  required('convenience',home.x+80,home.z+70,45,34,17,'#4d6171','slab',0,'home');box(home.x+80,22,home.z+49,44,3,3,M.cyan);
+  required('phantom',phantom.x,phantom.z,140,140,470,'#475167','twin',.3,'phantom');required('committee',committee.x,committee.z,210,180,290,'#567188','terrace',-.25,'committee');
+  required('prison',prison.x,prison.z,120,90,45,'#35465c','slab',0,'prison');for(const dx of [-140,140])for(const dz of [-100,100])required('watch-'+dx+'-'+dz,prison.x+dx,prison.z+dz,25,25,70,'#40566c','slab',0,'prison');
+  const stationScale=station.queryRadius/355;
+  required('station',station.x,station.z,450*stationScale,210*stationScale,80,'#526f88','station',0,'station');
+  for(let i=0;i<4;i++){const arch=mesh(new THREE.TorusGeometry(80*stationScale,5,5,24,Math.PI),M.trim,station.x+(-150+i*100)*stationScale,100,station.z);arch.rotation.y=Math.PI/2}
+  for(let i=0;i<5;i++)box(station.x,12,station.z+(120+i*12)*stationScale,530*stationScale,2,3,i%2?M.trim:M.cyan);
+  const portScale=port.queryRadius/375;
+  for(let i=0;i<6;i++)required('warehouse-'+i,port.x+(i%2?125:-125)*portScale,port.z+(-195+Math.floor(i/2)*195)*portScale,80*portScale,85*portScale,38,'#697383','arcade',0,'port');
+  for(let i=0;i<48;i++)box(port.x+(-185+i%12*32)*portScale,14+Math.floor(i/24)*12,port.z+(275+Math.floor(i/12)%2*32)*portScale,28*portScale,12,21*portScale,facade,0,pick(['#735273','#487086','#866152','#576583']));
+  for(let i=0;i<3;i++){const x=port.x+(-200+i*200)*portScale,z=port.z+180*portScale;box(x,90,z,8,175,8,M.trim);beam(V(x,180,z),V(x+45*portScale,180,z+75*portScale),8,8,M.amber);beam(V(x+45*portScale,180,z+75*portScale),V(x+45*portScale,70,z+75*portScale),2,2,M.trim)}
+  // Multi-wing shopping gallery: open atrium, sky bridges, ribbed glass roof and rooftop gardens.
+  const mall=siteById.mall,mq=mall.queryRadius/395,grass=mat('#3e7560'),pathMat=mat('#85999b'),pool=mat('#357a86',{roughness:.3});
+  const mb=(x,y,z,w,h,d,m=M.trim)=>box(mall.x+x*mq,y,mall.z+z*mq,w*mq,h,d*mq,m);
+  required('mall',mall.x,mall.z,500*mq,280*mq,58,'#879aa9','gallery',0,'mall');
+  mb(0,4,0,520,4,310,pathMat);mb(0,7,0,160,3,105,M.dark);
+  const atrium=mesh(new THREE.SphereGeometry(1,24,12,0,TAU,0,Math.PI/2),M.glass,mall.x,72,mall.z);atrium.scale.set(115*mq,59,92*mq);
+  for(let i=0;i<7;i++){const rib=mesh(new THREE.TorusGeometry(90*mq,2,4,22,Math.PI),M.alloy,mall.x+(-78+i*26)*mq,72,mall.z);rib.rotation.y=Math.PI/2;rib.scale.y=59/(90*mq)}
+  for(const z of [-48,48])mb(0,39,z,235,6,25,M.alloy);
+  for(const side of [-1,1]){mb(side*185,67,0,92,8,190,M.roof);mb(side*185,73,35,65,4,80,grass);for(let i=0;i<7;i++)mb(side*253,32,-111+i*37,4,50,10,M.alloy);mb(side*253,59,0,3,3,240,M.cyan)}
+  for(let i=0;i<10;i++){const x=-216+i*48;mb(x,25,-143,35,24,3,i%3?M.glass:M.pink);mb(x,42,-147,32,3,2,M.amber)}
+  mb(0,10,-199,260,4,88,M.alloy);for(let i=0;i<6;i++)mb(0,4+i,-246+i*9,260,2,12,M.trim);
+  for(const x of [-255,255]){mb(x,8,211,80,4,84,M.trim);for(let i=0;i<3;i++)tree(mall.x+x*mq,mall.z+(175+i*36)*mq,.65,10)}
+  for(let i=0;i<12;i++){const x=-190+i%6*75,z=228+Math.floor(i/6)*40;mb(x,5,z,26,1,33,M.road);mb(x,8,z,8,4,15,facade)}
+  atrium.name='Shopping gallery ribbed glass atrium';
+  // Organic city park: kidney pond, meandering walks, stepped amphitheatre and active recreation.
+  const park=siteById.park,pq=park.queryRadius/350;
+  const pv=(x,y,z)=>V(park.x+x*pq,y,park.z+z*pq),pb=(x,y,z,w,h,d,m)=>box(park.x+x*pq,y,park.z+z*pq,w*pq,h,d*pq,m);
+  const lawnShape=new THREE.Shape();for(let i=0;i<=80;i++){const a=i/80*TAU,r=325+12*Math.sin(a*3)+8*Math.cos(a*5),x=Math.cos(a)*r,z=Math.sin(a)*r;i?lawnShape.lineTo(x,-z):lawnShape.moveTo(x,-z)}
+  const lawn=mesh(new THREE.ShapeGeometry(lawnShape),grass,park.x,2,park.z);lawn.rotation.x=-Math.PI/2;lawn.scale.set(pq,pq,1);
+  function parkWalk(points,width=12,m=pathMat){const c=new THREE.CatmullRomCurve3(points.map(([x,z])=>pv(x,5,z))),ps=c.getSpacedPoints(45);for(let i=1;i<ps.length;i++)beam(ps[i-1],ps[i],width*pq,2,m)}
+  parkWalk([[-300,5],[-200,0],[-120,80],[0,80],[120,30],[230,10],[305,75]],17);
+  parkWalk([[-40,-310],[25,-190],[100,-85],[130,30],[210,135],[230,230]],12);
+  parkWalk([[-210,-210],[-275,-100],[-280,80],[-230,215],[-70,285],[100,260]],10);
+  const pondShape=new THREE.Shape();pondShape.moveTo(-145,-18);pondShape.bezierCurveTo(-200,70,-100,185,-5,155);pondShape.bezierCurveTo(55,145,70,80,8,66);pondShape.bezierCurveTo(-65,52,-73,-58,-145,-18);
+  const pond=mesh(new THREE.ShapeGeometry(pondShape,24),pool,park.x,4,park.z);pond.rotation.x=-Math.PI/2;pond.scale.set(pq,pq,1);
+  for(let i=0;i<5;i++){const r=(40+i*13)*pq;const seat=mesh(new THREE.RingGeometry(r,r+11*pq,32,1,0,Math.PI),M.alloy,park.x+95*pq,6+i*4,park.z+165*pq);seat.rotation.x=-Math.PI/2}
+  pb(95,7,163,75,8,48,M.roof);pb(183,5,-142,122,3,72,M.dark);for(const x of [122,244])pb(x,8,-142,2,2,72,M.cyan);
+  required('park-pavilion',park.x-185*pq,park.z+155*pq,72*pq,58*pq,22,'#8caaa4','arcade',0,'park');
+  for(let i=0;i<7;i++){pb(-245+i*24,15,-225,4,24,4,M.alloy);pb(-245+i*24,29,-225,22,3,50,M.trim)}
+  for(let i=0;i<150;i++){const a=rand()*TAU,r=between(125,302),x=Math.cos(a)*r,z=Math.sin(a)*r;if(x>-205&&x<90&&z>-195&&z<70||Math.hypot(x-95,z-165)<120||Math.hypot(x+185,z-155)<90||x>100&&z<-80)continue;tree(park.x+x*pq,park.z+z*pq,between(.65,1.1),4)}
+  for(let i=0;i<16;i++){const a=i/16*TAU,x=Math.cos(a)*292,z=Math.sin(a)*292;pb(x,7,z,15,4,5,M.trim);pb(x,15,z,1,22,1,M.trim);pb(x,27,z,4,2,4,M.amber)}
+  // Low-rise cyber-villas with private gardens and indexed local streets.
+  const villas=siteById.villas;
+  const internalStreet=(name,a,b,width)=>{beam(a,b,width,2,M.road);indexSegment(a,b,width);allRoads.push({name,elevated:false,width,segments:[{x:a.x,y:a.y,z:a.z},{x:b.x,y:b.y,z:b.z}]})};
+  for(const z of [-500,-300,-100,100,300,500]){const span=Math.sqrt((villas.r-15)**2-z*z);internalStreet('庭院支路 '+z,V(villas.x-span,6,villas.z+z),V(villas.x+span,6,villas.z+z),10)}
+  let villaIndex=0;
+  for(let row=-2;row<=2;row++)for(let col=-3;col<=3;col++){
+    const x=villas.x+col*150,z=villas.z+row*200;if(Math.hypot(x-villas.x,z-villas.z)>500)continue;
+    const b=placedBuilding('villa-'+villaIndex,x,z,46,56,between(12,19),pick(['#a1b5bd','#958ca8','#77959e','#afaaa3']),'villa',0,'villas');if(!b)continue;villaIndex++;
+    box(x,2,z,88,3,100,grass);box(x-41,6,z,3,8,92,M.trim);box(x+41,6,z,3,8,92,M.trim);box(x,6,z+45,84,8,3,M.trim);tree(x+32,z-35,.6,4);box(x-30,5,z+36,16,2,22,M.glass);
+  }
+  stats.villas=villaIndex;
+  // Sparse hardy scrub at the foothills; the high mountain ridges stay barren and unurbanised.
+  for(let i=0;i<80;i++){const x=between(-1300,5700),z=between(-5800,-2000),y=terrainHeight(x,z);if(!inside(x,z,120)||y<35||y>280||roadClearance(x,z,18)<y+35)continue;tree(x,z,between(.5,.8),y)}
+  // Dome is only a ghostly Fresnel edge; the architecture remains the visual protagonist.
+  const fresnel=normalWorld.dot(cameraPosition.sub(positionWorld).normalize()).abs().oneMinus().pow(4);
+  const domeMat=new THREE.MeshBasicNodeMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,colorNode:color('#73b8e2'),opacityNode:fresnel.mul(.042).add(sin(positionWorld.y.mul(.003).sub(clock.mul(.08))).abs().pow(26).mul(.004))});
+  const dome=mesh(new THREE.SphereGeometry(7300,64,28,0,TAU,0,Math.PI/2),domeMat,0,-50,0,domeGroup);dome.scale.y=.7;dome.castShadow=false;
+  // Vehicles follow the actual curved decks (including their altitude), without straight-line teleport gaps.
+  const vehicleCount=600,vehicleMesh=new THREE.InstancedMesh(new THREE.BoxGeometry(5,4,12),M.trim,vehicleCount),headMesh=new THREE.InstancedMesh(new THREE.BoxGeometry(5.2,1.2,2),M.ice,vehicleCount),cars=[];
+  vehicleMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);headMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);vehicleMesh.frustumCulled=false;headMesh.frustumCulled=false;traffic.add(vehicleMesh,headMesh);
+  const carRoutes=roadGraph.map(r=>{const length=r.curve.getLength(),steps=Math.ceil(length/12);return {...r,lookup:r.curve.getSpacedPoints(steps),length,steps}});
+  for(let i=0;i<vehicleCount;i++)cars.push({road:pick(carRoutes),phase:rand()*2,speed:between(25,60),lane:i%2?1:-1});
+  const trains=[];for(let j=0;j<3;j++)for(let k=0;k<3;k++){const group=new THREE.Group();traffic.add(group);for(let c=0;c<4;c++){const car=mesh(geos.box,M.alloy,0,0,c*25,group);car.scale.set(9,9,22);const win=mesh(geos.box,[M.cyan,M.amber,M.violet][j],0,1,c*25,group);win.scale.set(9.2,3,17)}trains.push({group,route:j,t:k/3})}
+  // Batch the dense city into a small number of actual GPU draw objects.
+  const dummy=new THREE.Object3D();for(const {kind,material,parent,items} of batches.values()){
+    const inst=new THREE.InstancedMesh(geos[kind],material,items.length);inst.name=`${kind} × ${items.length}`;inst.castShadow=!material.isMeshBasicNodeMaterial&&material!==M.road;inst.receiveShadow=true;
+    const tinted=items.some(v=>v.tint);items.forEach((v,i)=>{dummy.position.set(v.x,v.y,v.z);dummy.rotation.set(0,v.rotation,0);if(v.q)dummy.quaternion.copy(v.q);dummy.scale.set(v.w,v.h,v.d);dummy.updateMatrix();inst.setMatrixAt(i,dummy.matrix);if(tinted)inst.setColorAt(i,new THREE.Color(v.tint||'#ffffff'))});inst.computeBoundingSphere();parent.add(inst);
+  }
+  const landmarks=[
+    {id:'tower',name:'幻想之塔',x:0,z:0,y:3200,focusY:1200,radius:3800},
+    {id:'academy',name:'幻想学园',x:3100,z:-1350,y:690,focusY:160,radius:3000},
+    {id:'gate',name:'学园南大门',x:3100,z:gateZ,y:220,focusY:65,radius:560,viewOffset:[-220,280,-650]},
+    {id:'arena',name:'选战会场',x:4980,z:-1450,y:340,focusY:70,radius:1400},
+    {id:'cafe',name:'学园咖啡厅',x:cafe.x,z:cafe.z,y:50,focusY:20,radius:430},
+    {id:'mall',name:'星环购物中心',x:mall.x,z:mall.z,y:185,focusY:55,radius:820},
+    {id:'park',name:'流光城市公园',x:park.x,z:park.z,y:65,focusY:15,radius:850},
+    {id:'villas',name:'青岚庭院社区',x:villas.x,z:villas.z,y:85,focusY:25,radius:1550},
+    {id:'mountain',name:'东郊荒山',x:2300,z:-4300,y:terrainHeight(2300,-4300)+50,focusY:1350,radius:3900},
+    {id:'skyways',name:'空中交通环',x:-1850,z:1200,y:760,focusY:350,radius:2300}
+  ];
+  const carDummy=new THREE.Object3D(),p=V(),tangent=V(),head=V(),up=V(0,1,0),side=V();
+  function update(time,dt){clock.value=time;
+    for(let i=0;i<cars.length;i++){
+      const c=cars[i],r=c.road;c.phase=(c.phase+dt*c.speed/r.length)%2;const u=r.closed?c.phase%1:(c.phase<1?c.phase:2-c.phase),idx=Math.min(r.steps-1,Math.floor(u*r.steps)),f=u*r.steps-idx;p.lerpVectors(r.lookup[idx],r.lookup[idx+1],f);tangent.copy(r.lookup[idx+1]).sub(r.lookup[idx]).normalize();if(!r.closed&&c.phase>=1)tangent.negate();side.crossVectors(tangent,up).normalize();p.addScaledVector(side,c.lane*r.width*.19);p.y+=3.5;carDummy.position.copy(p);carDummy.quaternion.setFromUnitVectors(V(0,0,1),tangent);carDummy.scale.setScalar(r.elevated&&!airways.visible?0:1);carDummy.updateMatrix();vehicleMesh.setMatrixAt(i,carDummy.matrix);head.copy(p).addScaledVector(tangent,5.2);carDummy.position.copy(head);carDummy.updateMatrix();headMesh.setMatrixAt(i,carDummy.matrix);
+    }vehicleMesh.instanceMatrix.needsUpdate=true;headMesh.instanceMatrix.needsUpdate=true;
+    for(const tr of trains){tr.t=(tr.t+dt*.0028)%1;const curve=trainRoutes[tr.route];tr.group.position.copy(curve.getPointAt(tr.t)).add(V(0,7,0));tr.group.quaternion.setFromUnitVectors(V(0,0,1),curve.getTangentAt(tr.t))}
+  }
+  return {root,surface,airways,metro,traffic,domeGroup,tower,academy,arena,mainGate,terrain,stats,buildings,roadGraph,allRoads,landmarks,night,clock,update,coast,inside,terrainHeight,sites,checkedPlots,supports,campusPaths,fencePoints,parcelEnvelopes};
+}
+// END CITY MODEL
+
+// BEGIN QUALITY CONFIG
+function qualityProfile(name){return ({high:{label:'精细',shadowSize:2048,dpr:1.75,bloomScale:.5,dof:true},balanced:{label:'均衡',shadowSize:1024,dpr:1.35,bloomScale:.5,dof:true},low:{label:'轻量',shadowSize:512,dpr:.8,bloomScale:.35,dof:false},'ultra-low':{label:'极简',shadowSize:256,dpr:.6,bloomScale:.25,dof:false}})[name]||qualityProfile('balanced')}
+// END QUALITY CONFIG
+
+const $=id=>document.getElementById(id),progress=(n,text)=>{$('progress').style.width=n+'%';$('load-text').textContent=text};
+let renderer;
+try{
+  if(!isSecureContext||!navigator.gpu)throw new Error('当前环境未提供 WebGPU。请在支持 WebGPU 的浏览器与 HTTPS / localhost 环境中打开。');
+  if(!await navigator.gpu.requestAdapter({powerPreference:'high-performance'}))throw new Error('没有可用 WebGPU 适配器，请检查硬件加速与图形驱动。');
+  progress(12,'连接 Three.js r186.1 · 正在加载 TSL…');
+  const [THREE,TSL,{OrbitControls},{CSMShadowNode},{bloom},{dof}]=await Promise.all([import('three/webgpu'),import('three/tsl'),import('three/addons/controls/OrbitControls.js'),import('three/addons/csm/CSMShadowNode.js'),import('three/addons/tsl/display/BloomNode.js'),import('three/addons/tsl/display/DepthOfFieldNode.js')]);
+  renderer=new THREE.WebGPURenderer({antialias:true,powerPreference:'high-performance'});await renderer.init();
+  if(!renderer.backend.isWebGPUBackend){renderer.dispose();throw new Error('WebGPU 后端未能建立，请检查浏览器硬件加速与图形驱动。')}
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.35));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;$('viewport').appendChild(renderer.domElement);
+  const scene=new THREE.Scene();scene.background=new THREE.Color('#0b1528');
+  const camera=new THREE.PerspectiveCamera(43,innerWidth/innerHeight,3,48000),homePosition=new THREE.Vector3(10300,9200,12600),homeTarget=new THREE.Vector3(0,520,0);camera.position.copy(homePosition);
+  const controls=new OrbitControls(camera,renderer.domElement);controls.target.copy(homeTarget);controls.enableDamping=true;controls.dampingFactor=.07;controls.minDistance=70;controls.maxDistance=34000;controls.maxPolarAngle=Math.PI*.48;controls.autoRotateSpeed=.22;
+  progress(28,'生成连续山地 · 检查地块净空 · 铺设城市街区…');await new Promise(r=>setTimeout(r,20));
+  const city=createCity(THREE,TSL);scene.add(city.root);
+      const hemisphere=new THREE.HemisphereLight('#c9dbff','#607a95',2.3);scene.add(hemisphere);
+      const sun=new THREE.DirectionalLight('#c5dcff',2.2);sun.position.set(-9000,8000,5000);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.bias=-.00018;sun.shadow.normalBias=1.5;sun.shadow.camera.near=.5;sun.shadow.camera.far=42000;scene.add(sun,sun.target);
+      const fill=new THREE.DirectionalLight('#d0a0cd',1.15);fill.position.set(5000,5500,-9000);scene.add(fill);
+      const csm=new CSMShadowNode(sun,{cascades:4,mode:'practical',maxFar:30000,lightMargin:3600});csm.fade=true;sun.shadow.shadowNode=csm;
+      const {uniform,pass,fog,float,exp,sin,positionWorld,positionView}=TSL;
+      const fogStrength=uniform(.28),fogTint=uniform(new THREE.Color('#172644'));
+      const depth=positionView.z.negate().max(0),height=exp(positionWorld.y.max(0).mul(-.00075)),strata=sin(positionWorld.x.mul(.0007).add(positionWorld.z.mul(.001)).add(city.clock.mul(.04))).mul(.16).add(.84);
+      scene.fogNode=fog(fogTint,float(1).sub(exp(depth.mul(-.000027).mul(fogStrength).mul(height.mul(.65).add(.35)).mul(strata))).clamp(0,.72));
+      const pipeline=new THREE.RenderPipeline(renderer),scenePass=pass(scene,camera),sceneColor=scenePass.getTextureNode('output');
+      const focusDistance=uniform(camera.position.distanceTo(controls.target)),focalRange=uniform(16000),bokehScale=uniform(.4);
+      const depthOfField=dof(sceneColor,scenePass.getViewZNode(),focusDistance,focalRange,bokehScale);
+      // Official native-TSL implementation of the UnrealBloom multi-mip algorithm.
+      const bloomPass=bloom(sceneColor,.36,.35,1.25);bloomPass.setResolutionScale(.5);
+      function rebuildPipeline(){pipeline.outputNode=($('toggle-dof').checked?depthOfField:sceneColor).add(bloomPass);pipeline.needsUpdate=true}
+      rebuildPipeline();
+      // END RENDER SETUP
+  let selected=null,showLabels=true,cycle=false,flight=null,tour=false,tourIndex=0,tourNext=0,currentTime=19.2,elapsed=0,lastTime=0,frames=0,renderFailed=false,toastTimer;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fail(message){if(renderFailed)return;renderFailed=true;renderer.setAnimationLoop(null);window.showFallback(message)}
+  renderer.onError=info=>{console.error(info);fail('WebGPU 渲染验证失败：'+(info.message||info.type))};
+  function toast(text){$('toast').textContent=text;$('toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').style.display='none',4500)}
+  const stopTour=()=>{tour=false;$('tour').classList.remove('active')};
+  function flyTo(target,distance=2400,home=false,offset=null){const dir=offset?new THREE.Vector3(...offset).normalize():home?homePosition.clone().sub(homeTarget).normalize():camera.position.clone().sub(controls.target).normalize();dir.y=Math.max(.4,dir.y);dir.normalize();flight={start:elapsed,duration:reduced?.01:1.8,p0:camera.position.clone(),t0:controls.target.clone(),p1:target.clone().addScaledVector(dir,distance),t1:target.clone()};controls.autoRotate=false;$('orbit').classList.remove('active')}
+  function populatePlaces(){$('places').replaceChildren();for(const [i,l] of city.landmarks.entries()){const b=document.createElement('button');b.className='place'+(selected?.id===l.id?' selected':'');const n=document.createElement('span');n.className='num';n.textContent=String(i+1).padStart(2,'0');const t=document.createElement('span'),name=document.createElement('b'),sub=document.createElement('small'),a=document.createElement('span');name.textContent=l.name;sub.textContent=`X ${Math.round(l.x)} / Z ${Math.round(l.z)}`;a.className='arrow';a.textContent='↗';t.append(name,sub);b.append(n,t,a);b.onclick=()=>{stopTour();selectPlace(l.id)};$('places').appendChild(b)}}
+  function selectPlace(id){const l=city.landmarks.find(v=>v.id===id);if(!l)return;selected=l;populatePlaces();flyTo(new THREE.Vector3(l.x,l.focusY,l.z),l.radius*1.35,false,l.viewOffset||null);$('sidebar').classList.remove('open');$('mobile-menu').setAttribute('aria-expanded','false')}
+  populatePlaces();
+  const labels=city.landmarks.map(l=>{const el=document.createElement('button');el.className='maplabel'+(l.id==='tower'?' hero':'');const em=document.createElement('em');em.textContent='◈';el.append(em,document.createTextNode(l.name));el.onclick=()=>{stopTour();selectPlace(l.id)};$('labels').appendChild(el);return{l,el,p:new THREE.Vector3()}});
+  const daySky=new THREE.Color('#4c627c'),duskSky=new THREE.Color('#363147'),nightSky=new THREE.Color('#101c30'),sky=new THREE.Color(),warm=new THREE.Color('#f0d8c9'),cool=new THREE.Color('#c5dcff');
+  function updateSun(){const a=(currentTime-6)/24*Math.PI*2,elevation=Math.sin(a),day=THREE.MathUtils.smoothstep(elevation,-.12,.4),n=1-day;city.night.value=n;sun.position.set(Math.cos(a)*12000,Math.max(3500,elevation*15000),7000);sun.intensity=2.1+day*1.5;sun.color.copy(cool).lerp(warm,day);hemisphere.intensity=2.3+day*.25;fill.intensity=1.15;sky.copy(nightSky).lerp(daySky,day);if(elevation>-.15&&elevation<.35)sky.lerp(duskSky,.35);scene.background.copy(sky);fogTint.value.copy(sky);renderer.toneMappingExposure=1.2;bloomPass.strength.value=.26+n*.14;$('time-text').textContent=String(Math.floor(currentTime)%24).padStart(2,'0')+':'+String(Math.floor(currentTime%1*60)).padStart(2,'0')}
+  updateSun();
+  $('sun-time').oninput=e=>{currentTime=+e.target.value;updateSun()};$('toggle-cycle').onchange=e=>cycle=e.target.checked;$('toggle-dof').onchange=rebuildPipeline;$('toggle-labels').onchange=e=>showLabels=e.target.checked;$('toggle-skyways').onchange=e=>city.airways.visible=e.target.checked;$('toggle-dome').onchange=e=>city.domeGroup.visible=e.target.checked;$('toggle-traffic').onchange=e=>city.traffic.visible=e.target.checked;$('toggle-metro').onchange=e=>city.metro.visible=e.target.checked;$('fog').oninput=e=>{fogStrength.value=+e.target.value/100;$('fog-text').textContent=e.target.value+'%'};
+  $('quality').onchange=e=>{const q=qualityProfile(e.target.value);renderer.setPixelRatio(Math.min(devicePixelRatio,q.dpr));sun.shadow.mapSize.set(q.shadowSize,q.shadowSize);for(const l of csm.lights){l.shadow.mapSize.set(q.shadowSize,q.shadowSize);l.shadow.needsUpdate=true}bloomPass.setResolutionScale(q.bloomScale);if(!q.dof){$('toggle-dof').checked=false;rebuildPipeline()}toast(`${q.label} · 4 级 CSM × ${q.shadowSize}px`)};
+  const goHome=()=>{stopTour();selected=null;populatePlaces();flyTo(homeTarget,homePosition.distanceTo(homeTarget),true)};$('home').onclick=goHome;
+  $('orbit').onclick=()=>{stopTour();flight=null;controls.autoRotate=!controls.autoRotate;$('orbit').classList.toggle('active',controls.autoRotate)};
+  $('tour').onclick=()=>{tour=!tour;$('tour').classList.toggle('active',tour);if(tour){tourIndex=0;tourNext=0;toast('城市巡游已开始，拖拽或 Esc 停止。')}};
+  const zoom=f=>{flight=null;const v=camera.position.clone().sub(controls.target);v.setLength(THREE.MathUtils.clamp(v.length()*f,controls.minDistance,controls.maxDistance));camera.position.copy(controls.target).add(v)};$('zoom-in').onclick=()=>zoom(.8);$('zoom-out').onclick=()=>zoom(1.25);
+  $('help-button').onclick=()=>$('help').style.display='block';$('close-help').onclick=$('help-done').onclick=()=>$('help').style.display='none';$('mobile-menu').onclick=()=>{const on=$('sidebar').classList.toggle('open');$('mobile-menu').setAttribute('aria-expanded',String(on))};
+  controls.addEventListener('start',()=>{flight=null;stopTour();controls.autoRotate=false;$('orbit').classList.remove('active')});
+  const keys=new Set();window.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea,button'))return;const k=e.key.toLowerCase();if(['w','a','s','d','h','o','escape'].includes(k))e.preventDefault();keys.add(k);if(e.repeat)return;if(k==='h')goHome();if(k==='o')$('orbit').click();if(k==='escape'){$('help').style.display='none';stopTour();flight=null}});window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>keys.clear());
+  const clip=new THREE.Vector3(),forward=new THREE.Vector3(),rects=[];
+  function updateLabels(){rects.length=0;camera.getWorldDirection(forward);const panels=[$('sidebar'),document.querySelector('.right'),document.querySelector('.maptools')].map(el=>el.getBoundingClientRect());const ordered=[...labels].sort((a,b)=>(b.l.id===selected?.id?2:b.l.id==='tower'?1:0)-(a.l.id===selected?.id?2:a.l.id==='tower'?1:0));for(const {l,el,p} of ordered){let show=showLabels;p.set(l.x,l.y+40,l.z);clip.copy(p).sub(camera.position);if(clip.dot(forward)<=0||clip.length()>29000)show=false;p.project(camera);const x=(p.x*.5+.5)*innerWidth,y=(-p.y*.5+.5)*innerHeight;if(p.z>1||p.z<0||x<65||x>innerWidth-65||y<30||y>innerHeight-30)show=false;const r={x:x-65,y:y-22,w:130,h:43};if(panels.some(o=>o.width>0&&r.x<o.right&&r.x+r.w>o.left&&r.y<o.bottom&&r.y+r.h>o.top)||rects.some(o=>r.x<o.x+o.w&&r.x+r.w>o.x&&r.y<o.y+o.h&&r.y+r.h>o.y))show=false;if(show){rects.push(r);el.style.left=x+'px';el.style.top=y+'px'}el.style.display=show?'block':'none'}}
+  let down=null;renderer.domElement.addEventListener('pointerdown',e=>down={x:e.clientX,y:e.clientY});renderer.domElement.addEventListener('pointerup',e=>{if(!down||e.button!==0||Math.hypot(e.clientX-down.x,e.clientY-down.y)>5)return;let found=null,best=30;for(const l of city.landmarks){clip.set(l.x,l.y,l.z).project(camera);if(clip.z>1||clip.z<0)continue;const d=Math.hypot((clip.x*.5+.5)*innerWidth-e.clientX,(-clip.y*.5+.5)*innerHeight-e.clientY);if(d<best){found=l;best=d}}if(found)selectPlace(found.id)});
+  window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);if(csm.camera)csm.updateFrustums()});
+  window.fantasiaAtlas={version:THREE.REVISION,stats:city.stats,roadNames:city.roadGraph.map(r=>r.name),selectPlace,goHome,get renderer(){return renderer},get scene(){return scene},get csm(){return csm}};
+  progress(77,'编译巨型建筑、TSL 霓虹、四级阴影与景深辉光…');controls.update();city.update(0,0);scene.updateMatrixWorld(true);await renderer.compileAsync(scene,camera);pipeline.render();if(renderFailed)throw new Error('图形设备未能完成渲染初始化。');
+  window.atlasReady=true;window.atlasFailed=false;clearTimeout(window.bootWatchdog);$('fallback').style.display='none';progress(100,'都市已上线 · 欢迎来到幻想城');setTimeout(()=>{$('loader').style.opacity='0';setTimeout(()=>$('loader').style.display='none',600)},150);
+  if(innerWidth<760)document.querySelector('.environment').open=false;
+  renderer.backend.device?.lost.then(info=>{if(info.reason!=='destroyed')fail('图形设备连接丢失：'+(info.message||info.reason))});
+  const moveForward=new THREE.Vector3(),moveRight=new THREE.Vector3(),move=new THREE.Vector3();
+  renderer.setAnimationLoop(timestamp=>{if(renderFailed)return;try{const dt=lastTime?Math.min((timestamp-lastTime)/1000,.05):.016;lastTime=timestamp;elapsed+=dt;if(cycle){currentTime=(currentTime+dt*.1)%24;$('sun-time').value=currentTime;updateSun()}if(tour&&elapsed>=tourNext){selectPlace(city.landmarks[tourIndex++%city.landmarks.length].id);tourNext=elapsed+9}if(flight){const t=Math.min(1,(elapsed-flight.start)/flight.duration),s=t*t*(3-2*t);camera.position.lerpVectors(flight.p0,flight.p1,s);controls.target.lerpVectors(flight.t0,flight.t1,s);if(t===1)flight=null}if(['w','a','s','d'].some(k=>keys.has(k))){flight=null;stopTour();camera.getWorldDirection(moveForward);moveForward.y=0;moveForward.normalize();moveRight.crossVectors(moveForward,camera.up).normalize();move.set(0,0,0);if(keys.has('w'))move.add(moveForward);if(keys.has('s'))move.sub(moveForward);if(keys.has('d'))move.add(moveRight);if(keys.has('a'))move.sub(moveRight);move.normalize().multiplyScalar(dt*camera.position.distanceTo(controls.target)*.35);camera.position.add(move);controls.target.add(move)}controls.update();city.update(reduced?0:elapsed,reduced?0:dt);focusDistance.value=camera.position.distanceTo(controls.target);focalRange.value=Math.max(1500,focusDistance.value*1.1);pipeline.render();if(frames++%3===0)updateLabels()}catch(e){console.error(e);fail('三维绘制中断：'+e.message)}});
+}catch(error){console.error(error);clearTimeout(window.bootWatchdog);renderer?.setAnimationLoop(null);window.showFallback(error.message||String(error))}
+</script>
+</body>
+</html>

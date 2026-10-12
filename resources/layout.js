@@ -44,6 +44,8 @@
             <span>·</span>
             <a href="lore.html">设定档案</a>
             <span>·</span>
+            <a href="map.html">3D全景地图</a>
+            <span>·</span>
             <a href="view.html">全站导览</a>
             <span>·</span>
             <a href="resources/Fantasy City Lost.html" target="_blank">游戏源文件</a>
@@ -63,6 +65,7 @@
         if (path.endsWith('novel.html')) return 'novel';
         if (path.endsWith('games.html') || path.endsWith('cards.html')) return 'games';
         if (path.endsWith('lore.html') || path.endsWith('settings.html')) return 'lore';
+        if (path.endsWith('map.html')) return 'map';
         if (path.endsWith('view.html') || path.endsWith('fantasycity.html')) return 'view';
         if (path.endsWith('index.html') || path.endsWith('/') || path === '') return 'index';
         return '';

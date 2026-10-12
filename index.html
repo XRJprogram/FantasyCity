@@ -206,6 +206,28 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(192, 57, 43, 0.15);
         }
+        .btn-map {
+            background: linear-gradient(135deg, #1C3B57, #2E5C8A);
+            color: #fff;
+            border-color: rgba(90, 160, 220, 0.35);
+            box-shadow: 0 6px 18px rgba(30, 60, 95, 0.28);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-map::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 70%);
+            pointer-events: none;
+        }
+        .btn-map:hover {
+            background: linear-gradient(135deg, #244C70, #3B72A8);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(30, 60, 95, 0.4);
+            border-color: rgba(140, 200, 255, 0.6);
+        }
 
         /* ---------- 主视觉 Hero 区域 ---------- */
         .hero-section {
@@ -880,6 +902,9 @@
                     </a>
                     <a href="lore.html" class="btn btn-outline">
                         <i class="fas fa-scroll"></i> 设定档案
+                    </a>
+                    <a href="map.html" class="btn btn-map">
+                        <i class="fas fa-cubes"></i> 3D全景地图
                     </a>
                 </div>
             </div>
