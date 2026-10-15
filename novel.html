@@ -24,6 +24,58 @@
             padding: 0;
             box-sizing: border-box;
         }
+        /* 全局极简圆柱体滚动条（彻底移除上下箭头） */
+        @supports not selector(::-webkit-scrollbar) {
+            html, body, * {
+                scrollbar-width: thin !important;
+                scrollbar-color: rgba(140, 140, 140, 0.35) transparent !important;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 7px !important;
+            height: 7px !important;
+        }
+        ::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-track-piece {
+            background: transparent !important;
+            border: none !important;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(140, 140, 140, 0.35) !important;
+            border-radius: 999px !important;
+            border: none !important;
+            min-height: 36px !important;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(170, 170, 170, 0.6) !important;
+        }
+        ::-webkit-scrollbar-button,
+        ::-webkit-scrollbar-button:single-button,
+        ::-webkit-scrollbar-button:double-button,
+        ::-webkit-scrollbar-button:vertical,
+        ::-webkit-scrollbar-button:horizontal,
+        ::-webkit-scrollbar-button:decrement,
+        ::-webkit-scrollbar-button:increment,
+        ::-webkit-scrollbar-button:start,
+        ::-webkit-scrollbar-button:end,
+        ::-webkit-scrollbar-button:start:decrement,
+        ::-webkit-scrollbar-button:end:increment,
+        ::-webkit-scrollbar-button:vertical:start:decrement,
+        ::-webkit-scrollbar-button:vertical:end:increment,
+        ::-webkit-scrollbar-button:horizontal:start:decrement,
+        ::-webkit-scrollbar-button:horizontal:end:increment {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            font-size: 0 !important;
+            line-height: 0 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+        ::-webkit-scrollbar-corner {
+            display: none !important;
+            background: transparent !important;
+        }
         :root {
             --bg-page: #FDF5ED;
             --bg-card: #FFFFFF;

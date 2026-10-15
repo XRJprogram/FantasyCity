@@ -20,6 +20,61 @@
             padding: 0;
             box-sizing: border-box;
         }
+        /* 全局极简圆柱体滚动条（彻底移除上下箭头） */
+        @supports not selector(::-webkit-scrollbar) {
+            html, body, * {
+                scrollbar-width: thin !important;
+                scrollbar-color: rgba(140, 140, 140, 0.38) transparent !important;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 7px !important;
+            height: 7px !important;
+            background: transparent !important;
+        }
+        ::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-track-piece {
+            background: transparent !important;
+            border: none !important;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(140, 140, 140, 0.38) !important;
+            border-radius: 999px !important;
+            border: none !important;
+            min-height: 40px !important;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(170, 170, 170, 0.65) !important;
+        }
+        ::-webkit-scrollbar-button,
+        ::-webkit-scrollbar-button:single-button,
+        ::-webkit-scrollbar-button:double-button,
+        ::-webkit-scrollbar-button:vertical,
+        ::-webkit-scrollbar-button:horizontal,
+        ::-webkit-scrollbar-button:decrement,
+        ::-webkit-scrollbar-button:increment,
+        ::-webkit-scrollbar-button:start,
+        ::-webkit-scrollbar-button:end,
+        ::-webkit-scrollbar-button:start:decrement,
+        ::-webkit-scrollbar-button:end:increment,
+        ::-webkit-scrollbar-button:vertical:start:decrement,
+        ::-webkit-scrollbar-button:vertical:end:increment,
+        ::-webkit-scrollbar-button:horizontal:start:decrement,
+        ::-webkit-scrollbar-button:horizontal:end:increment {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            font-size: 0 !important;
+            line-height: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            background: transparent !important;
+            border: none !important;
+        }
+        ::-webkit-scrollbar-corner {
+            display: none !important;
+            background: transparent !important;
+        }
         :root {
             --bg-page: #FDF5ED;
             --bg-card: #FFFFFF;
@@ -204,145 +259,166 @@
             flex: 1;
         }
 
-        /* ---------- 暗黑模式平滑过渡 (滑动到角色图鉴时变黑) ---------- */
-        body {
-            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
+        
+
+        /* ---------- 暗黑模式平滑自然过渡 (滑动到角色图鉴时平滑渐入，低饱和素雅色调) ---------- */
+        #darkThemeOverlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            background-color: #0b0d12;
+            background-image: 
+                radial-gradient(circle at 50% 12%, rgba(26, 32, 44, 0.45) 0%, rgba(11, 13, 18, 0.98) 75%),
+                linear-gradient(180deg, rgba(15, 18, 25, 0.3) 0%, rgba(9, 11, 15, 0.95) 100%);
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity;
         }
+        body.char-dark-active #darkThemeOverlay {
+            opacity: 1;
+        }
+
+        body {
+            position: relative;
+            transition: color 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        main.container, #site-header, #site-footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 元素色彩平滑过渡 */
+        .page-header h1, .breadcrumbs a, .breadcrumbs span,
+        #characterSection .section-header h2,
+        #characterSection .section-header p,
+        #characterSection .section-tag,
+        .navbar, .nav-brand, .nav-brand i, .nav-brand span.subtitle, .nav-links a,
+        .footer, .footer-links a {
+            transition: color 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                        background 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                        border-color 0.9s ease,
+                        box-shadow 0.9s ease;
+        }
+
         body.char-dark-active {
-            background-color: #080b11 !important;
-            background-image: radial-gradient(circle at 50% 15%, rgba(30, 41, 59, 0.45) 0%, rgba(8, 11, 17, 0.98) 75%) !important;
-            color: #e2e8f0;
+            color: #cbd5e1;
         }
         body.char-dark-active .page-header h1 {
-            color: #ffffff;
+            color: #f1f5f9;
         }
         body.char-dark-active .breadcrumbs a,
         body.char-dark-active .breadcrumbs span {
-            color: #94a3b8;
+            color: #64748b;
         }
         body.char-dark-active #characterSection .section-header h2 {
-            color: #ffffff !important;
-            text-shadow: 0 0 25px rgba(255, 71, 87, 0.25);
+            color: #f8fafc !important;
+            text-shadow: none;
         }
         body.char-dark-active #characterSection .section-header p {
-            color: #94a3b8 !important;
+            color: #8892b0 !important;
         }
         body.char-dark-active #characterSection .section-tag {
-            background: rgba(255, 71, 87, 0.15) !important;
-            color: #ff6b81 !important;
-            border: 1px solid rgba(255, 71, 87, 0.3) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: #94a3b8 !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
         }
 
-        /* 导航栏与页脚在暗黑状态下的配合 */
+        /* 导航栏与页脚暗黑联动 */
         body.char-dark-active .navbar {
-            background: rgba(8, 11, 17, 0.85) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6) !important;
+            background: rgba(11, 13, 18, 0.88) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
         }
         body.char-dark-active .nav-brand {
-            color: #ff4757 !important;
+            color: #e2e8f0 !important;
+        }
+        body.char-dark-active .nav-brand i {
+            color: #cbd5e1 !important;
         }
         body.char-dark-active .nav-brand span.subtitle {
-            color: #94a3b8 !important;
-            border-left-color: rgba(255, 255, 255, 0.15) !important;
+            color: #64748b !important;
+            border-left-color: rgba(255, 255, 255, 0.12) !important;
         }
         body.char-dark-active .nav-links a {
-            color: #cbd5e1 !important;
+            color: #94a3b8 !important;
         }
         body.char-dark-active .nav-links a:hover,
         body.char-dark-active .nav-links a.active {
-            background: #ff4757 !important;
-            color: #fff !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
         }
         body.char-dark-active .footer {
-            background: rgba(8, 11, 17, 0.92) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-            color: #64748b !important;
+            background: rgba(11, 13, 18, 0.95) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            color: #475569 !important;
         }
         body.char-dark-active .footer-links a {
-            color: #94a3b8 !important;
+            color: #64748b !important;
         }
         body.char-dark-active .footer-links a:hover {
-            color: #ff4757 !important;
+            color: #cbd5e1 !important;
         }
         body.char-dark-active ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.18) !important;
         }
         body.char-dark-active ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 71, 87, 0.7);
-        }
-        body.char-dark-active * {
-            scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+            background: rgba(255, 255, 255, 0.35) !important;
         }
 
-        /* ---------- 角色分类工具条 (平行四边形切角风格，移除搜索框) ---------- */
-        .char-toolbar {
-            margin: 0 auto 32px;
-            display: flex;
-            justify-content: center;
-            position: sticky;
-            top: 76px;
-            z-index: 50;
-            padding: 10px 0;
-            background: transparent;
-        }
-        .char-filter-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            max-width: 1050px;
-        }
-        .char-filter-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 7px 16px;
-            font-family: var(--font-sans);
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            transform: skewX(-14deg);
+        /* 世界观与角色图鉴自然过渡带样式 */
+        .lore-to-char-transition {
             position: relative;
-            user-select: none;
+            height: 90px;
+            margin-top: 35px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
         }
-        .char-filter-btn span {
-            display: inline-block;
-            transform: skewX(14deg);
+        .transition-glow-line {
+            width: 100%;
+            max-width: 460px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+            position: relative;
         }
-        .char-filter-btn:hover {
-            background: rgba(255, 255, 255, 0.14);
-            border-color: rgba(255, 255, 255, 0.35);
-            color: #ffffff;
-            transform: skewX(-14deg) translateY(-2px);
+        .transition-glow-line::after {
+            content: "◆";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.65rem;
+            color: rgba(148, 163, 184, 0.45);
+            background: var(--bg-page);
+            padding: 0 12px;
+            transition: background 0.9s cubic-bezier(0.22, 1, 0.36, 1), color 0.9s ease;
         }
-        .char-filter-btn.active {
-            background: linear-gradient(135deg, #ff4757, #c026d3);
-            border-color: rgba(255, 255, 255, 0.6);
-            color: #ffffff;
-            box-shadow: 0 4px 18px rgba(255, 71, 87, 0.45);
-            transform: skewX(-14deg) translateY(-2px);
+        body.char-dark-active .transition-glow-line::after {
+            background: #0b0d12;
+            color: rgba(203, 213, 225, 0.5);
         }
 
-        /* ---------- 大型平行四边形展示卡片 ---------- */
+        /* ---------- 大型平行四边形展示卡片 (低调沉稳、素雅高级) ---------- */
         .char-showcase-wrap {
-            margin-bottom: 40px;
+            margin-bottom: 45px;
             position: relative;
-            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.65));
+            filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.5));
         }
         .char-showcase-card {
             position: relative;
-            background: linear-gradient(145deg, #10141d 0%, #0a0d14 100%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            clip-path: polygon(28px 0, 100% 0, calc(100% - 28px) 100%, 0 100%);
+            background: linear-gradient(145deg, #12151c 0%, #0d0f15 100%);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            clip-path: polygon(24px 0, 100% 0, calc(100% - 24px) 100%, 0 100%);
             display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            min-height: 520px;
-            overflow: hidden;
-            transition: border-color 0.3s ease;
+            grid-template-columns: 1.12fr 0.88fr;
+            min-height: 500px;
+            overflow: visible;
         }
         .char-showcase-card::before {
             content: "";
@@ -350,14 +426,14 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #ff4757, #ff6b81, #38bdf8);
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05));
             z-index: 10;
         }
 
         /* 左侧：角色信息与生平简介 */
         .showcase-info-col {
-            padding: 38px 42px 34px 44px;
+            padding: 40px 42px 34px 44px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -377,7 +453,7 @@
             gap: 5px;
             padding: 4px 12px;
             font-size: 0.74rem;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: 0.05em;
             transform: skewX(-12deg);
             line-height: 1.2;
@@ -387,83 +463,63 @@
             transform: skewX(12deg);
         }
         .sc-cat-pill {
-            background: rgba(56, 189, 248, 0.15);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            color: #38bdf8;
-        }
-        .sc-rank-99 {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.15));
-            border: 1px solid #fbbf24;
-            color: #fbbf24;
-            box-shadow: 0 0 12px rgba(251, 191, 36, 0.25);
-        }
-        .sc-age-pill {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #94a3b8;
         }
+        .sc-rank-99 {
+            background: rgba(217, 119, 6, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #f59e0b;
+        }
+
         .showcase-name-block {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .showcase-char-name {
             font-size: 2.8rem;
-            font-weight: 900;
+            font-weight: 850;
             line-height: 1.1;
-            color: #ffffff;
-            letter-spacing: 0.03em;
-            background: linear-gradient(135deg, #ffffff 30%, #e2e8f0 70%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
+            color: #f8fafc;
+            letter-spacing: 0.04em;
             margin: 0;
         }
         .showcase-ability-box {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 71, 87, 0.1);
-            border-left: 3px solid #ff4757;
-            padding: 8px 16px;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 2px solid #94a3b8;
+            padding: 7px 16px;
             margin-bottom: 20px;
             transform: skewX(-10deg);
         }
         .showcase-ability-box > * {
             transform: skewX(10deg);
         }
-        .sc-ability-label {
-            font-size: 0.72rem;
-            color: #ff6b81;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-        }
         .sc-ability-val {
             font-size: 1.05rem;
-            font-weight: 800;
-            color: #ffffff;
+            font-weight: 700;
+            color: #e2e8f0;
         }
 
         .showcase-desc-panel {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 20px 22px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 2px solid rgba(255, 255, 255, 0.22);
+            padding: 22px 26px;
             position: relative;
             margin-bottom: 24px;
             flex: 1;
+            transform: skewX(-10deg);
         }
-        .sc-desc-title {
-            font-size: 0.76rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            color: #64748b;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .showcase-desc-panel > * {
+            transform: skewX(10deg);
         }
         .sc-desc-text {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: #cbd5e1;
+            font-size: 0.94rem;
+            line-height: 1.85;
+            color: #94a3b8;
             text-align: justify;
             margin: 0;
         }
@@ -472,14 +528,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding-top: 16px;
             margin-top: auto;
         }
         .sc-nav-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
             padding: 7px 18px;
             font-size: 0.84rem;
             font-weight: 700;
@@ -494,74 +550,89 @@
             transform: skewX(12deg);
         }
         .sc-nav-btn:hover {
-            background: #ff4757;
-            border-color: #ff4757;
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #f8fafc;
         }
         .sc-counter {
             font-family: Consolas, monospace;
-            font-size: 0.88rem;
-            color: #64748b;
+            font-size: 0.85rem;
+            color: #475569;
             letter-spacing: 0.08em;
         }
 
-        /* 右侧：角色立绘展示区 */
+        /* ---------- 右侧：立绘错位平行四边形框 (Staggered Parallelogram Frame) ---------- */
         .showcase-portrait-col {
             position: relative;
-            background: #080a10;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 30px;
+            overflow: visible;
+        }
+        .portrait-stage {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            height: 460px;
+        }
+        /* 错位底层线框：向右下偏移 14px，营造视差层叠线框感 */
+        .portrait-wireframe-back {
+            position: absolute;
+            inset: 0;
+            transform: translate(14px, 14px) skewX(-10deg);
+            border: 1.5px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.015);
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+        /* 主立绘平行四边形框 */
+        .portrait-frame-main {
+            position: absolute;
+            inset: 0;
+            transform: skewX(-10deg);
+            background: #090b10;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
             overflow: hidden;
-            min-height: 520px;
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 2;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+        .portrait-stage:hover .portrait-wireframe-back {
+            transform: translate(20px, 20px) skewX(-10deg);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .portrait-stage:hover .portrait-frame-main {
+            transform: translate(-2px, -2px) skewX(-10deg);
+            border-color: rgba(255, 255, 255, 0.35);
         }
         .portrait-display {
             width: 100%;
             height: 100%;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
         }
         .portrait-display img {
-            width: 100%;
+            width: calc(100% + 80px);
             height: 100%;
+            margin-left: -40px;
             object-fit: cover;
             object-position: center top;
+            transform: skewX(10deg);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .portrait-display:hover img {
-            transform: scale(1.03);
+            transform: skewX(10deg) scale(1.04);
         }
         .portrait-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(8, 10, 16, 0.1) 0%, rgba(8, 10, 16, 0.2) 60%, rgba(8, 10, 16, 0.8) 100%),
-                        radial-gradient(circle at center, transparent 40%, rgba(8, 10, 16, 0.5) 100%);
+            background: linear-gradient(180deg, transparent 65%, rgba(9, 11, 16, 0.85) 100%);
             pointer-events: none;
         }
-        .portrait-tag {
-            position: absolute;
-            bottom: 16px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            color: #38bdf8;
-            padding: 4px 12px;
-            font-family: Consolas, monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            transform: skewX(-10deg);
-            z-index: 5;
-        }
-        .portrait-tag span {
-            display: inline-block;
-            transform: skewX(10deg);
-        }
 
-        /* 立绘留空占位模块 (如果没有角色立绘，留空占位) */
+        /* 留空占位模块 (平行四边形切角) */
         .portrait-empty-ph {
             width: 100%;
             height: 100%;
@@ -573,21 +644,21 @@
             box-sizing: border-box;
             text-align: center;
             position: relative;
-            background: radial-gradient(circle at center, rgba(30, 41, 59, 0.3) 0%, #07090e 80%);
+            background: radial-gradient(circle at center, rgba(30, 36, 48, 0.25) 0%, #080a0f 80%);
         }
         .ph-grid-pattern {
             position: absolute;
             inset: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 28px 28px;
-            opacity: 0.8;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.7;
         }
         .ph-watermark-char {
             position: absolute;
-            font-size: 16rem;
+            font-size: 15rem;
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.015);
             user-select: none;
             pointer-events: none;
             font-family: "Noto Serif SC", serif;
@@ -600,40 +671,40 @@
             align-items: center;
         }
         .ph-icon-box {
-            width: 72px;
-            height: 72px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            color: #64748b;
-            margin-bottom: 18px;
+            font-size: 1.5rem;
+            color: #475569;
+            margin-bottom: 16px;
         }
         .ph-headline {
             font-family: Consolas, monospace;
-            font-size: 0.76rem;
-            letter-spacing: 0.2em;
-            color: #38bdf8;
-            margin-bottom: 6px;
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            color: #64748b;
+            margin-bottom: 5px;
         }
         .ph-status {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #e2e8f0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #cbd5e1;
             letter-spacing: 0.05em;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .ph-subtext {
-            font-size: 0.82rem;
-            color: #64748b;
+            font-size: 0.8rem;
+            color: #475569;
             line-height: 1.6;
-            max-width: 240px;
+            max-width: 220px;
         }
 
-        /* ---------- 角色档案库：缩小为仅显示名字的平行四边形微缩滑块 ---------- */
+        /* ---------- 角色微缩平行四边形滑块网格 (素雅高级灰，仅显示名字) ---------- */
         .char-badges-grid {
             display: flex;
             flex-wrap: wrap;
@@ -642,9 +713,9 @@
             margin-bottom: 80px;
         }
         .char-badge {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #8892b0;
             padding: 8px 18px;
             font-size: 0.92rem;
             font-weight: 700;
@@ -660,51 +731,49 @@
         }
         .char-badge-name {
             display: inline-block;
-            transform: skewX(14deg); /* 文本反向扭正，保持正体易读 */
+            transform: skewX(14deg);
         }
         .char-badge:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.35);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.22);
+            color: #f1f5f9;
             transform: skewX(-14deg) translateY(-2px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
         }
         .char-badge.active {
-            background: linear-gradient(135deg, #ff4757, #c026d3);
-            border-color: rgba(255, 255, 255, 0.7);
+            background: #252b36;
+            border-color: rgba(255, 255, 255, 0.4);
             color: #ffffff;
-            transform: skewX(-14deg) translateY(-3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4), 0 0 10px rgba(192, 38, 211, 0.3);
+            transform: skewX(-14deg) translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
             z-index: 5;
         }
-        /* 0.99 角色标记：金光菱形角标 */
+        /* 0.99 角色精简标记：琥珀色微角标 */
         .char-badge.is-99::after {
             content: "";
             position: absolute;
             top: -2px;
             right: -2px;
-            width: 6px;
-            height: 6px;
-            background: #fbbf24;
-            box-shadow: 0 0 8px #fbbf24;
+            width: 5px;
+            height: 5px;
+            background: #d97706;
+            box-shadow: 0 0 5px rgba(217, 119, 6, 0.7);
             transform: rotate(45deg);
         }
-        /* 拥有独立立绘角色：微光青色角标 */
+        /* 拥有独立立绘角色：冷灰角标 */
         .char-badge.has-portrait::before {
             content: "";
             position: absolute;
             bottom: -2px;
             left: -2px;
-            width: 6px;
-            height: 6px;
-            background: #38bdf8;
-            box-shadow: 0 0 6px #38bdf8;
+            width: 5px;
+            height: 5px;
+            background: #64748b;
             transform: rotate(45deg);
         }
 
         /* 移动端响应式布局 */
         @media (max-width: 860px) {
-            .page-header h1 { font-size: 2.1rem; }
             .char-showcase-card {
                 grid-template-columns: 1fr;
                 clip-path: polygon(16px 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
@@ -713,9 +782,11 @@
                 padding: 26px 22px;
             }
             .showcase-portrait-col {
-                min-height: 380px;
-                border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 20px;
+            }
+            .portrait-stage {
+                max-width: 320px;
+                height: 400px;
             }
             .showcase-char-name {
                 font-size: 2.2rem;
@@ -724,6 +795,8 @@
     </style>
 </head>
 <body>
+    <!-- 全局暗黑自然平滑背景过渡层 (GPU硬件加速) -->
+    <div id="darkThemeOverlay" aria-hidden="true"></div>
 
     <!-- ===== 页眉 (由 resources/layout.js 统一从 resources/header.html 载入) ===== -->
     <div id="site-header"></div>
@@ -791,6 +864,11 @@
             </div>
         </section>
 
+        <!-- 世界观向角色档案的平滑过渡带 -->
+        <div class="lore-to-char-transition" aria-hidden="true">
+            <div class="transition-glow-line"></div>
+        </div>
+
         <!-- ===== 登场角色 · 档案图鉴 ===== -->
         <section id="characterSection">
             <div class="section-header">
@@ -799,65 +877,53 @@
                 <p>穿行在幻想城的大街小巷，每一位能力者都有着各自的天赋与宿命</p>
             </div>
 
-            <!-- 分类筛选工具条 (已移除搜索框，平行四边形切角标签) -->
-            <div class="char-toolbar">
-                <div class="char-filter-tabs">
-                    <button class="char-filter-btn active" data-type="all"><span>全部系别</span></button>
-                    <button class="char-filter-btn" data-type="transcendent"><span>超然存在</span></button>
-                    <button class="char-filter-btn" data-type="special"><span>特殊能力</span></button>
-                    <button class="char-filter-btn" data-type="impact"><span>影响系</span></button>
-                    <button class="char-filter-btn" data-type="subspace"><span>亚空间系</span></button>
-                    <button class="char-filter-btn" data-type="spatial"><span>空间系</span></button>
-                    <button class="char-filter-btn" data-type="temporal"><span>时间系</span></button>
-                    <button class="char-filter-btn" data-type="psychic"><span>心灵系</span></button>
-                    <button class="char-filter-btn" data-type="matter"><span>物质系</span></button>
-                    <button class="char-filter-btn" data-type="electromag"><span>电磁系</span></button>
-                    <button class="char-filter-btn" data-type="telekinesis"><span>意念系</span></button>
-                </div>
-            </div>
-
             <!-- 大型平行四边形角色详情展示卡片 -->
             <div class="char-showcase-wrap" id="charShowcaseWrap">
                 <div class="char-showcase-card" id="charShowcaseCard">
-                    <!-- 左侧：角色信息与简介 -->
+                    <!-- 左侧：角色信息与生平简介 -->
                     <div class="showcase-info-col">
                         <div>
                             <div class="showcase-badges-row">
                                 <span class="sc-pill sc-cat-pill" id="scCategory"><span>影响系</span></span>
-                                <span class="sc-pill sc-rank-99" id="scRank"><span>★ 0.99 级 · 神明领域</span></span>
-                                <span class="sc-pill sc-age-pill" id="scAge"><span>AGE: 12</span></span>
+                                <span class="sc-pill sc-rank-99" id="scRank"><span>★ 0.99 级 · 绝对能力者</span></span>
                             </div>
                             <div class="showcase-name-block">
                                 <h3 class="showcase-char-name" id="scName">芙楠</h3>
                             </div>
                             <div class="showcase-ability-box">
-                                <span class="sc-ability-label"><i class="fas fa-bolt"></i> 异能形态</span>
+                                <i class="fas fa-bolt" style="color:#64748b;font-size:0.85rem;"></i>
                                 <span class="sc-ability-val" id="scAbility">虚无技能 # · 绝对时间</span>
                             </div>
                         </div>
 
                         <div class="showcase-desc-panel">
-                            <div class="sc-desc-title"><i class="fas fa-fingerprint"></i> 档案记录与生平简介</div>
                             <p class="sc-desc-text" id="scDesc">加载中...</p>
                         </div>
 
                         <div class="showcase-bottom-nav">
                             <button class="sc-nav-btn" id="scPrevBtn" title="上一位角色"><span><i class="fas fa-chevron-left"></i> 上一位</span></button>
-                            <span class="sc-counter" id="scCounter">01 / 67</span>
+                            <span class="sc-counter" id="scCounter">01 / 65</span>
                             <button class="sc-nav-btn" id="scNextBtn" title="下一位角色"><span>下一位 <i class="fas fa-chevron-right"></i></span></button>
                         </div>
                     </div>
 
-                    <!-- 右侧：角色立绘展示或留空占位 -->
-                    <div class="showcase-portrait-col" id="scPortraitViewport">
-                        <!-- 动态渲染立绘或占位 -->
+                    <!-- 右侧：平行四边形立绘框（双层错位架构） -->
+                    <div class="showcase-portrait-col">
+                        <div class="portrait-stage">
+                            <!-- 错位底层线框 -->
+                            <div class="portrait-wireframe-back"></div>
+                            <!-- 错位主立绘框 -->
+                            <div class="portrait-frame-main" id="scPortraitViewport">
+                                <!-- 动态渲染立绘或占位 -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- 角色微缩平行四边形滑块网格（仅显示名字，点击激活） -->
             <div class="char-badges-grid" id="charBadgesGrid">
-                <!-- 动态渲染 -->
+                <!-- 动态渲染全部角色 -->
             </div>
         </section>
     </main>
@@ -869,14 +935,12 @@
         // 角色图鉴交互逻辑与暗黑滚动触发
         document.addEventListener('DOMContentLoaded', () => {
             const characterSection = document.getElementById('characterSection');
-            const filterBtns = document.querySelectorAll('.char-filter-btn');
             const badgesContainer = document.getElementById('charBadgesGrid');
             
             // 展示大卡片元素引用
             const scName = document.getElementById('scName');
             const scCategory = document.getElementById('scCategory');
             const scRank = document.getElementById('scRank');
-            const scAge = document.getElementById('scAge');
             const scAbility = document.getElementById('scAbility');
             const scDesc = document.getElementById('scDesc');
             const scCounter = document.getElementById('scCounter');
@@ -884,24 +948,27 @@
             const scPrevBtn = document.getElementById('scPrevBtn');
             const scNextBtn = document.getElementById('scNextBtn');
 
-            // 1. 滚轮滑动到角色图鉴部分时页面变黑
+            // 1. 滚轮滑动到角色图鉴部分时平滑自然过渡至暗黑模式（带防抖迟滞区间）
+            let isDarkActive = false;
             const handleScrollTheme = () => {
                 if (!characterSection) return;
                 const rect = characterSection.getBoundingClientRect();
-                // 当角色图鉴部分滑入视野中心时触发全屏暗黑过渡
-                if (rect.top <= window.innerHeight * 0.45 && rect.bottom >= 120) {
+                const enterThreshold = window.innerHeight * 0.70; // 滚动至屏幕70%高度即自然启动柔和渐入
+                const exitThreshold = window.innerHeight * 0.82;  // 向上滚动超过82%高度时柔和退出
+
+                if (!isDarkActive && rect.top <= enterThreshold && rect.bottom >= 80) {
+                    isDarkActive = true;
                     document.body.classList.add('char-dark-active');
-                } else {
+                } else if (isDarkActive && (rect.top > exitThreshold || rect.bottom < 50)) {
+                    isDarkActive = false;
                     document.body.classList.remove('char-dark-active');
                 }
             };
             window.addEventListener('scroll', handleScrollTheme, { passive: true });
-            handleScrollTheme(); // 初始检测
+            handleScrollTheme();
 
-            // 2. 数据与过滤管理
+            // 2. 数据与画廊管理 (无多余分类栏，直接全览)
             const characters = window.FANTASY_CHARACTERS || [];
-            let currentCategory = 'all';
-            let filteredChars = [...characters];
             let selectedIndex = 0;
 
             // 默认优先选中核心主角“芙楠”
@@ -911,20 +978,8 @@
             // 渲染平行四边形名字微缩滑块
             function renderBadges() {
                 badgesContainer.innerHTML = '';
-                filteredChars = currentCategory === 'all' 
-                    ? [...characters]
-                    : characters.filter(c => c.categoryKey === currentCategory);
 
-                if (filteredChars.length === 0) {
-                    badgesContainer.innerHTML = '<div style="color:#64748b;padding:30px;">暂无该分类下的角色档案</div>';
-                    return;
-                }
-
-                if (selectedIndex >= filteredChars.length) {
-                    selectedIndex = 0;
-                }
-
-                filteredChars.forEach((char, idx) => {
+                characters.forEach((char, idx) => {
                     const badge = document.createElement('div');
                     badge.className = 'char-badge';
                     if (char.isLevel99) badge.classList.add('is-99');
@@ -957,7 +1012,7 @@
 
             // 更新大型展示卡片
             function updateShowcase() {
-                const char = filteredChars[selectedIndex];
+                const char = characters[selectedIndex];
                 if (!char) return;
 
                 // 左侧数据更新
@@ -967,35 +1022,27 @@
                 if (char.isLevel99) {
                     scRank.style.display = 'inline-flex';
                     scRank.className = 'sc-pill sc-rank-99';
-                    scRank.innerHTML = '<span>★ 0.99 级 · 神明领域</span>';
+                    scRank.innerHTML = '<span>★ 0.99 级 · 绝对能力者</span>';
                 } else {
                     scRank.style.display = 'inline-flex';
                     scRank.className = 'sc-pill sc-cat-pill';
                     scRank.innerHTML = '<span>标准能力者</span>';
                 }
 
-                if (char.age) {
-                    scAge.style.display = 'inline-flex';
-                    scAge.innerHTML = `<span>AGE: ${char.age}</span>`;
-                } else {
-                    scAge.style.display = 'none';
-                }
-
                 scAbility.textContent = char.ability;
                 scDesc.textContent = char.desc;
-                scCounter.textContent = `${String(selectedIndex + 1).padStart(2, '0')} / ${String(filteredChars.length).padStart(2, '0')}`;
+                scCounter.textContent = `${String(selectedIndex + 1).padStart(2, '0')} / ${String(characters.length).padStart(2, '0')}`;
 
-                // 右侧立绘展示与留空占位
+                // 右侧平行四边形立绘展示与留空占位
                 if (char.hasPortrait && char.portraitUrl) {
                     scPortraitViewport.innerHTML = `
                         <div class="portrait-display">
                             <img src="${char.portraitUrl}" alt="${char.name} 立绘" loading="lazy" />
                             <div class="portrait-overlay"></div>
-                            <div class="portrait-tag"><span>FANTASIA // ${char.name}</span></div>
                         </div>
                     `;
                 } else {
-                    // 留空占位 (无立绘时展示高科技剪影水印)
+                    // 留空占位 (平行四边形内部水印)
                     const initialChar = char.name.charAt(0);
                     scPortraitViewport.innerHTML = `
                         <div class="portrait-empty-ph">
@@ -1003,9 +1050,9 @@
                             <div class="ph-watermark-char">${initialChar}</div>
                             <div class="ph-core">
                                 <div class="ph-icon-box"><i class="fas fa-fingerprint"></i></div>
-                                <div class="ph-headline">// DOSSIER ARCHIVE //</div>
+                                <div class="ph-headline">// DOSSIER //</div>
                                 <div class="ph-status">立绘采集中 · PENDING</div>
-                                <p class="ph-subtext">【${char.name}】的形象立绘尚未解密实装<br>正在持续采集中，敬请期待</p>
+                                <p class="ph-subtext">【${char.name}】的形象立绘尚未解密实装<br>正在收录中，敬请期待</p>
                             </div>
                         </div>
                     `;
@@ -1015,29 +1062,18 @@
             // 切换上一位 / 下一位
             if (scPrevBtn) {
                 scPrevBtn.addEventListener('click', () => {
-                    if (filteredChars.length <= 1) return;
-                    const newIdx = (selectedIndex - 1 + filteredChars.length) % filteredChars.length;
+                    if (characters.length <= 1) return;
+                    const newIdx = (selectedIndex - 1 + characters.length) % characters.length;
                     selectCharacter(newIdx);
                 });
             }
             if (scNextBtn) {
                 scNextBtn.addEventListener('click', () => {
-                    if (filteredChars.length <= 1) return;
-                    const newIdx = (selectedIndex + 1) % filteredChars.length;
+                    if (characters.length <= 1) return;
+                    const newIdx = (selectedIndex + 1) % characters.length;
                     selectCharacter(newIdx);
                 });
             }
-
-            // 分类筛选标签切换
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentCategory = btn.getAttribute('data-type');
-                    selectedIndex = 0;
-                    renderBadges();
-                });
-            });
 
             // 初始化渲染
             renderBadges();

@@ -119,22 +119,22 @@ window.FANTASY_CHARACTERS = [
   },
   {
     "id": "char_9",
-    "name": "时序",
+    "name": "红糖",
     "age": null,
-    "ability": "未知异能",
+    "ability": "特殊异能",
     "categoryKey": "special",
     "categoryName": "特殊能力",
     "categoryColor": "#A855F7",
     "isLevel99": false,
     "hasPortrait": false,
     "portraitUrl": null,
-    "desc": "维护幻想城时间与因果秩序的神秘存在，行走在不同时序切片中的无声执法者。"
+    "desc": "幻想城特殊能力者。掌握奇异的特殊异能，在繁复的都市暗流中静默前行。"
   },
   {
     "id": "char_10",
     "name": "巧可",
     "age": 13,
-    "ability": "虚无技能(前期)",
+    "ability": "虚无技能 / 绝对时间",
     "categoryKey": "impact",
     "categoryName": "影响系",
     "categoryColor": "#F43F5E",
@@ -147,14 +147,14 @@ window.FANTASY_CHARACTERS = [
     "id": "char_11",
     "name": "芙楠",
     "age": 12,
-    "ability": "虚无技能",
+    "ability": "虚无技能 # · 绝对时间",
     "categoryKey": "impact",
     "categoryName": "影响系",
     "categoryColor": "#F43F5E",
     "isLevel99": true,
     "hasPortrait": true,
     "portraitUrl": "resources/portraits/芙楠.jpg",
-    "desc": "《幻想城》核心主角之一，幻想学园学员。全城仅九位 0.99 神明级行者之一。早期觉醒“绝对时间”，后期彻底参悟并掌握足以逆转全场法则的“虚无技能”，深陷幻想之塔与能力胶质的宏大谜团之中。"
+    "desc": "《幻想城》核心主角之一。全城仅九位 0.99 绝对能力者之一，并非幻想学园学员。早期觉醒“绝对时间”，后期彻底参悟并掌握足以逆转全场法则的“虚无技能”，深陷幻想之塔与能力胶质的宏大谜团之中。"
   },
   {
     "id": "char_12",
@@ -245,7 +245,7 @@ window.FANTASY_CHARACTERS = [
     "isLevel99": true,
     "hasPortrait": false,
     "portraitUrl": null,
-    "desc": "九大 0.99 神明领域行者之一，15岁。拥有骇人听闻的能量操控能力，能吸收、转化与放大一切物理与异能辐射，形成无可阻挡的能量回响。"
+    "desc": "九大 0.99 绝对能力者之一，15岁。拥有骇人听闻的能量操控能力，能吸收、转化与放大一切物理与异能辐射，形成无可阻挡的能量回响。"
   },
   {
     "id": "char_19",
@@ -440,7 +440,7 @@ window.FANTASY_CHARACTERS = [
     "isLevel99": true,
     "hasPortrait": false,
     "portraitUrl": null,
-    "desc": "九大 0.99 神明领域行者之一，13岁。拥有空间创造的极上位异能，超越常规的空间转移，能凭空依照意志开辟独立的口袋次元空间。"
+    "desc": "九大 0.99 绝对能力者之一，13岁。拥有空间创造的极上位异能，超越常规的空间转移，能凭空依照意志开辟独立的口袋次元空间。"
   },
   {
     "id": "char_34",
@@ -483,32 +483,6 @@ window.FANTASY_CHARACTERS = [
   },
   {
     "id": "char_37",
-    "name": "巧可",
-    "age": 13,
-    "ability": "绝对时间",
-    "categoryKey": "temporal",
-    "categoryName": "时间系",
-    "categoryColor": "#FBBF24",
-    "isLevel99": false,
-    "hasPortrait": true,
-    "portraitUrl": "resources/portraits/巧可.jpg",
-    "desc": "于第三章首次登场，“美食家联盟”队长。初期拥有高达 0.95 强度的罕见“虚无技能”，能强制使周围对手的能力彻底失效；随后进一步开发掌握“绝对时间”异能，实力极强。"
-  },
-  {
-    "id": "char_38",
-    "name": "芙楠",
-    "age": 12,
-    "ability": "绝对时间(前期)",
-    "categoryKey": "temporal",
-    "categoryName": "时间系",
-    "categoryColor": "#FBBF24",
-    "isLevel99": true,
-    "hasPortrait": true,
-    "portraitUrl": "resources/portraits/芙楠.jpg",
-    "desc": "《幻想城》核心主角之一，幻想学园学员。全城仅九位 0.99 神明级行者之一。早期觉醒“绝对时间”，后期彻底参悟并掌握足以逆转全场法则的“虚无技能”，深陷幻想之塔与能力胶质的宏大谜团之中。"
-  },
-  {
-    "id": "char_39",
     "name": "安然",
     "age": 13,
     "ability": "时间束缚",
@@ -521,7 +495,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "时间系能力者，掌握时间束缚，能延缓甚至锁死敌方时间流动节奏。"
   },
   {
-    "id": "char_40",
+    "id": "char_38",
     "name": "挽歌",
     "age": 12,
     "ability": "时光收敛",
@@ -534,7 +508,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "时间系能力者，掌握时光收敛，能将扩散的时间波动聚拢回溯至数秒之前。"
   },
   {
-    "id": "char_41",
+    "id": "char_39",
     "name": "冰泉",
     "age": 13,
     "ability": "念话潜入",
@@ -547,7 +521,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "于第二章首次登场，幻想学园一年级新生，“飓风”成员。蓝发冷峻少女，可在队友脑海中单向同步战术指令并干扰敌方心智。"
   },
   {
-    "id": "char_42",
+    "id": "char_40",
     "name": "星空",
     "age": 11,
     "ability": "意志操控",
@@ -557,10 +531,10 @@ window.FANTASY_CHARACTERS = [
     "isLevel99": true,
     "hasPortrait": false,
     "portraitUrl": null,
-    "desc": "九大 0.99 神明领域行者之一，11岁。全城最年幼的 0.99 极上位天才，能在神不知鬼不觉中心灵支配多重意念网络，改写心智认知。"
+    "desc": "九大 0.99 绝对能力者之一，11岁。全城最年幼的 0.99 极上位天才，能在神不知鬼不觉中心灵支配多重意念网络，改写心智认知。"
   },
   {
-    "id": "char_43",
+    "id": "char_41",
     "name": "团子",
     "age": 14,
     "ability": "绝对调停",
@@ -573,7 +547,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "心灵系能力者，掌握绝对调停，能强行平息战局中所有参与者的敌意与攻击欲望。"
   },
   {
-    "id": "char_44",
+    "id": "char_42",
     "name": "柠洢",
     "age": 12,
     "ability": "意念扭曲",
@@ -586,7 +560,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "心灵系能力者，掌握意念扭曲，能扭曲敌方的空间距离感与神经反射感知。"
   },
   {
-    "id": "char_45",
+    "id": "char_43",
     "name": "祈画",
     "age": 13,
     "ability": "虚幻现实",
@@ -599,7 +573,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "心灵系能力者，掌握虚幻现实，能将心灵深处的所想具象化为以假乱真的精神幻境。"
   },
   {
-    "id": "char_46",
+    "id": "char_44",
     "name": "冰雪",
     "age": 13,
     "ability": "能力幻想",
@@ -612,7 +586,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "心灵系能力者，掌握能力幻想，能模拟并构筑出其他异能运作的思维假象。"
   },
   {
-    "id": "char_47",
+    "id": "char_45",
     "name": "芊眠",
     "age": 10,
     "ability": "意识感染",
@@ -625,7 +599,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "心灵系能力者，10岁，掌握意识感染，能让意识潜入周围生物实现思维链连接。"
   },
   {
-    "id": "char_48",
+    "id": "char_46",
     "name": "墨寒",
     "age": 13,
     "ability": "火焰涌现",
@@ -638,7 +612,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "于第三章首次登场，“美食家联盟”成员。能力为火焰涌现，能在周身瞬间爆发灼热火海封锁敌方。"
   },
   {
-    "id": "char_49",
+    "id": "char_47",
     "name": "小桃",
     "age": 13,
     "ability": "植物控制",
@@ -651,7 +625,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "于第三章首次登场，“美食家联盟”成员。能力为植物控制，能撒播种子快速催生出坚韧的藤蔓牢笼。"
   },
   {
-    "id": "char_50",
+    "id": "char_48",
     "name": "卡琳",
     "age": 13,
     "ability": "碳构转换",
@@ -661,10 +635,10 @@ window.FANTASY_CHARACTERS = [
     "isLevel99": true,
     "hasPortrait": false,
     "portraitUrl": null,
-    "desc": "九大 0.99 神明领域行者之一，13岁。掌握碳构转换异能，能对碳基与有机物晶体进行瞬时分子级重构与高维硬化，攻防一体。"
+    "desc": "九大 0.99 绝对能力者之一，13岁。掌握碳构转换异能，能对碳基与有机物晶体进行瞬时分子级重构与高维硬化，攻防一体。"
   },
   {
-    "id": "char_51",
+    "id": "char_49",
     "name": "寒冰",
     "age": 13,
     "ability": "极寒冰刃",
@@ -677,7 +651,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "物质系能力者，掌握极寒冰刃，能瞬间凝结空气中水汽为极度坚硬锋利的冰魄刃芒。"
   },
   {
-    "id": "char_52",
+    "id": "char_50",
     "name": "云落",
     "age": 12,
     "ability": "幻想造物",
@@ -690,7 +664,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "物质系能力者，掌握幻想造物，能凭空凝聚无机物质制造各种战术道具与结构。"
   },
   {
-    "id": "char_53",
+    "id": "char_51",
     "name": "幻灭",
     "age": 12,
     "ability": "毒气制造",
@@ -703,7 +677,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "物质系能力者，掌握毒气制造，能合成各种具备神经阻断与麻痹效果的化学毒雾。"
   },
   {
-    "id": "char_54",
+    "id": "char_52",
     "name": "风铃",
     "age": 13,
     "ability": "叶之遐想",
@@ -716,7 +690,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "物质系能力者，掌握叶之遐想，能操控植物脉络与纤维实施隐秘绞杀。"
   },
   {
-    "id": "char_55",
+    "id": "char_53",
     "name": "莉莉",
     "age": 13,
     "ability": "空气重组",
@@ -729,7 +703,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "物质系能力者，掌握空气重组，能自由分离和化合大气中的各类气体成分。"
   },
   {
-    "id": "char_56",
+    "id": "char_54",
     "name": "塔塔",
     "age": 13,
     "ability": "电磁操控",
@@ -739,10 +713,10 @@ window.FANTASY_CHARACTERS = [
     "isLevel99": true,
     "hasPortrait": true,
     "portraitUrl": "resources/portraits/塔塔.jpg",
-    "desc": "幻想城九大 0.99 神明领域行者之一。掌握全城最顶尖的电磁操控能力，能自由调度全频段电磁场与雷暴等离子能量，战术破坏力冠绝全城。"
+    "desc": "幻想城九大 0.99 绝对能力者之一。掌握全城最顶尖的电磁操控能力，能自由调度全频段电磁场与雷暴等离子能量，战术破坏力冠绝全城。"
   },
   {
-    "id": "char_57",
+    "id": "char_55",
     "name": "电光",
     "age": 13,
     "ability": "电光火石",
@@ -755,7 +729,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "电磁系能力者，掌握电光火石，能在毫秒之间化作电光穿透敌方阵线。"
   },
   {
-    "id": "char_58",
+    "id": "char_56",
     "name": "小安",
     "age": 11,
     "ability": "等离雷电",
@@ -768,7 +742,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "电磁系能力者，掌握等离雷电，能释放极高温度的等离子高压雷电球。"
   },
   {
-    "id": "char_59",
+    "id": "char_57",
     "name": "月怡",
     "age": 12,
     "ability": "电磁集中",
@@ -781,7 +755,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "电磁系能力者，掌握电磁集中，能将发散的电磁波精确聚焦于一点形成高温熔穿。"
   },
   {
-    "id": "char_60",
+    "id": "char_58",
     "name": "路克",
     "age": 13,
     "ability": "电性引导",
@@ -794,7 +768,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "电磁系能力者，掌握电性引导，引导正负电荷流动构建战场高压电网。"
   },
   {
-    "id": "char_61",
+    "id": "char_59",
     "name": "路米",
     "age": 13,
     "ability": "磁性引导",
@@ -807,7 +781,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "电磁系能力者，掌握磁性引导，操控强磁场操控金属造物与金属飞弹。"
   },
   {
-    "id": "char_62",
+    "id": "char_60",
     "name": "雷克",
     "age": 13,
     "ability": "未知异能",
@@ -820,7 +794,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "电磁系雷暴掌控者，能够瞬间激化空气分子电离产生高压雷暴电弧，爆发力极强。"
   },
   {
-    "id": "char_63",
+    "id": "char_61",
     "name": "涵影",
     "age": null,
     "ability": "闪烁光剑",
@@ -833,7 +807,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "于第一章首次登场，充满正义感的意念使，幻想学园三年级学生。 于第一章首次登场，幻想学园三年级学生。性格正直坚毅，在银行见义勇为阻击劫匪，能力为将光线凝结为高温实体光刃。"
   },
   {
-    "id": "char_64",
+    "id": "char_62",
     "name": "华安",
     "age": null,
     "ability": "念力操控",
@@ -846,7 +820,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "于第二章首次登场，幻想学园一年级新生，“飓风”成员。脸上有黑红交织印记，能扭曲光线进行短暂隐身与隔空刺杀。"
   },
   {
-    "id": "char_65",
+    "id": "char_63",
     "name": "烟雾",
     "age": 13,
     "ability": "念想爆破",
@@ -859,7 +833,7 @@ window.FANTASY_CHARACTERS = [
     "desc": "意念系能力者，掌握念想爆破，能用精神意志引爆凝聚的念力残片。"
   },
   {
-    "id": "char_66",
+    "id": "char_64",
     "name": "布恩",
     "age": 13,
     "ability": "具象感知",
