@@ -128,3 +128,36 @@
         justify-content: space-between;
     }
 }
+
+/* ========================================================
+   全局单一圆柱体滚动条规范（注意：显式移除上下箭头组件）
+   ======================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(140, 120, 100, 0.38);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(192, 57, 43, 0.7);
+}
+/* 移除 WebKit 滚动条上下箭头按钮组件 */
+::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(140, 120, 100, 0.38) transparent;
+}
+
