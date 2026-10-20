@@ -971,6 +971,9 @@
             const characters = window.FANTASY_CHARACTERS || [];
             let selectedIndex = 0;
 
+            // 全局立绘显示开关：根据要求下掉网页所有人物立绘的展示（保留本地资源与数据），统一显示绝密档案占位
+            const ENABLE_PORTRAITS = false;
+
             // 默认优先选中核心主角“芙楠”
             const defaultIndex = characters.findIndex(c => c.name === '芙楠');
             if (defaultIndex !== -1) selectedIndex = defaultIndex;
@@ -983,7 +986,7 @@
                     const badge = document.createElement('div');
                     badge.className = 'char-badge';
                     if (char.isLevel99) badge.classList.add('is-99');
-                    if (char.hasPortrait) badge.classList.add('has-portrait');
+                    if (ENABLE_PORTRAITS && char.hasPortrait) badge.classList.add('has-portrait');
                     if (idx === selectedIndex) badge.classList.add('active');
 
                     badge.innerHTML = `<span class="char-badge-name">${char.name}</span>`;
@@ -1033,8 +1036,8 @@
                 scDesc.textContent = char.desc;
                 scCounter.textContent = `${String(selectedIndex + 1).padStart(2, '0')} / ${String(characters.length).padStart(2, '0')}`;
 
-                // 右侧平行四边形立绘展示与留空占位
-                if (char.hasPortrait && char.portraitUrl) {
+                // 右侧平行四边形立绘展示与留空占位（下掉展示时统一走留空占位分支）
+                if (ENABLE_PORTRAITS && char.hasPortrait && char.portraitUrl) {
                     scPortraitViewport.innerHTML = `
                         <div class="portrait-display">
                             <img src="${char.portraitUrl}" alt="${char.name} 立绘" loading="lazy" />
