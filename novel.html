@@ -982,13 +982,16 @@
             const refreshBtn = document.getElementById('refreshChaptersBtn');
             if (refreshBtn) refreshBtn.classList.add('loading');
 
+            // 严格校验是否为用户主动点击按钮发起的强制刷新（防范事件回调中将 Event 对象误判为 true）
+            const forceReload = (isForce === true);
+
             try {
                 // 并行拉取章节数据（时间戳防缓存）与云端统计
                 await Promise.allSettled([
                     (async () => {
                         if (window.location.protocol !== 'file:') {
                             const res = await fetch(`data/chapters.json?_t=${Date.now()}`, {
-                                cache: isForce ? 'reload' : 'no-cache',
+                                cache: forceReload ? 'reload' : 'no-cache',
                                 headers: {
                                     'Cache-Control': 'no-cache',
                                     'Pragma': 'no-cache'
@@ -1022,17 +1025,33 @@
             renderChapterList();
 
             // 若不是强制刷新，从 URL 读取参数；若是强制刷新，保持当前阅读章
-            if (!isForce) {
+            if (!forceReload) {
                 const urlParams = new URLSearchParams(window.location.search);
-                const queryIndex = parseInt(urlParams.get('chapter'));
+                const chapterParam = urlParams.get('chapter');
                 let startIndex = 0;
-                if (!isNaN(queryIndex) && queryIndex >= 0 && queryIndex < chapters.length) {
-                    startIndex = queryIndex;
+                if (chapterParam !== null && chapterParam !== '') {
+                    // 支持纯数字、'chapter=18'、'ch18' 或 '第19章' 等输入格式
+                    const match = String(chapterParam).match(/\d+/);
+                    if (match) {
+                        const parsed = parseInt(match[0], 10);
+                        if (!isNaN(parsed)) {
+                            if (parsed >= 0 && parsed < chapters.length) {
+                                startIndex = parsed;
+                            } else if (parsed >= chapters.length) {
+                                // 若输入超出最大范围（如仅20章输入了20或更高），自动定位到最新一章
+                                startIndex = chapters.length - 1;
+                            } else {
+                                startIndex = 0;
+                            }
+                        }
+                    }
                 }
                 renderChapter(startIndex);
             } else {
                 if (currentIndex >= 0 && currentIndex < chapters.length) {
                     renderChapter(currentIndex);
+                } else {
+                    renderChapter(0);
                 }
             }
 
@@ -1107,15 +1126,21 @@
         // ============================================================
         //  4. 渲染章节正文与统计信息
         // ============================================================
-        function renderChapter(index) {
+        function renderChapter(index, updateHistory = true) {
             if (!chapters.length || index < 0 || index >= chapters.length) return;
             currentIndex = index;
 
-            // 更新侧边栏高亮状态
+            // 更新侧边栏高亮状态并平滑滚动到可见区域
+            let activeLi = null;
             document.querySelectorAll('#chapterList li[data-index]').forEach(li => {
                 const i = parseInt(li.dataset.index);
-                li.classList.toggle('active', i === index);
+                const isActive = (i === index);
+                li.classList.toggle('active', isActive);
+                if (isActive) activeLi = li;
             });
+            if (activeLi) {
+                activeLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
 
             const ch = chapters[index];
             const title = ch.title || `第 ${index + 1} 章`;
@@ -1266,9 +1291,11 @@
             });
 
             // 更新 URL 参数 (无需刷新页面，保持状态可分享)
-            const url = new URL(window.location);
-            url.searchParams.set('chapter', index);
-            window.history.replaceState({ chapter: index }, '', url);
+            if (updateHistory) {
+                const url = new URL(window.location);
+                url.searchParams.set('chapter', index);
+                window.history.replaceState({ chapter: index }, '', url);
+            }
 
             // 动态挂载本章节的专属独立 Giscus 评论区
             loadGiscusForChapter(index, title);
@@ -1342,11 +1369,29 @@
             }
         });
 
+        // 监听浏览器前进/后退导航
+        window.addEventListener('popstate', (event) => {
+            if (!chapters || chapters.length === 0) return;
+            const urlParams = new URLSearchParams(window.location.search);
+            const chapterParam = urlParams.get('chapter');
+            if (chapterParam !== null && chapterParam !== '') {
+                const match = String(chapterParam).match(/\d+/);
+                if (match) {
+                    const parsed = parseInt(match[0], 10);
+                    if (!isNaN(parsed) && parsed >= 0 && parsed < chapters.length) {
+                        if (parsed !== currentIndex) {
+                            renderChapter(parsed, false);
+                        }
+                    }
+                }
+            }
+        });
+
         // 启动加载
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadChapters);
+            document.addEventListener('DOMContentLoaded', () => loadChapters(false));
         } else {
-            loadChapters();
+            loadChapters(false);
         }
     </script>
 </body>
